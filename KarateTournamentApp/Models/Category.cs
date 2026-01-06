@@ -1,12 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace KarateTournamentApp.Models
 {
-    internal class Category
+    public class Category
     {
+        public string Name { get; set; }
+        public List<Participant> Participants { get; set; } = new List<Participant>();
+        public object BracketRoot { get; set; }
+
+        public Category(string name)
+        {
+            Name = name;
+        }
     }
 }
