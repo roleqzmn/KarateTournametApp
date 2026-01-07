@@ -4,9 +4,103 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KarateTournamentApp"
+        xmlns:models="clr-namespace:KarateTournamentApp.Models"
+        xmlns:system="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Karate Tournament Manager" Height="600" Width="1000" Background="#F0F0F0">
 
+    <Window.Resources>
+        <ObjectDataProvider x:Key="BeltsEnum" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:Belts"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+
+        <ObjectDataProvider x:Key="SexEnum" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="models:Sex"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
+
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="15" BorderBrush="#DDD" BorderThickness="1">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Rejestracja Zawodnika" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Foreground="#333"/>
+
+                    <TextBlock Text="Imię:" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,15" Padding="5"/>
+
+                    <TextBlock Text="Nazwisko:" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,15" Padding="5"/>
+
+                    <TextBlock Text="Wiek:" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding Age, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,15" Padding="5"/>
+
+                    <TextBlock Text="Płeć (obowiązkowa):" FontWeight="SemiBold"/>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource SexEnum}}" 
+                              SelectedItem="{Binding SelectedSex}" Margin="0,5,0,15" Padding="5"/>
+
+                    <TextBlock Text="Stopień (Pas):" FontWeight="SemiBold"/>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource BeltsEnum}}" 
+                              SelectedItem="{Binding SelectedBelt}" Margin="0,5,0,15" Padding="5"/>
+
+                    <TextBlock Text="Konkurencje (min. jedna):" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                    <ItemsControl ItemsSource="{Binding CategorySelections}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Content="{Binding DisplayName}" 
+                                          IsChecked="{Binding IsSelected, Mode=TwoWay}" 
+                                          Margin="0,2"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Text="Klub (opcjonalnie):" Margin="0,15,0,5" FontWeight="SemiBold"/>
+                    <TextBox Text="{Binding Club}" Margin="0,0,0,20" Padding="5"/>
+
+                    <Button Content="DODAJ ZAWODNIKA" 
+                            Command="{Binding AddParticipantCommand}" 
+                            Height="40" Background="#27AE60" Foreground="White" FontWeight="Bold" Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.5"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="20,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Zarejestrowani Zawodnicy" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <DataGrid Grid.Row="1" ItemsSource="{Binding AllParticipants}" AutoGenerateColumns="False" 
+                      CanUserAddRows="False" Background="White" AlternatingRowBackground="#F9F9F9">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Imię" Binding="{Binding FirstName}" Width="*"/>
+                    <DataGridTextColumn Header="Nazwisko" Binding="{Binding LastName}" Width="*"/>
+                    <DataGridTextColumn Header="Wiek" Binding="{Binding Age}" Width="50"/>
+                    <DataGridTextColumn Header="Płeć" Binding="{Binding Sex}" Width="70"/>
+                    <DataGridTextColumn Header="Pas" Binding="{Binding Belt}" Width="80"/>
+                    <DataGridTextColumn Header="Klub" Binding="{Binding Club}" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
     </Grid>
 </Window>

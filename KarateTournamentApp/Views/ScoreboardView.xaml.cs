@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows.Controls;
 
 namespace KarateTournamentApp.Views
 {
-    internal class ScoreboardView
+    public partial class ScoreboardView : UserControl
     {
+        public ScoreboardView()
+        {
+            InitializeComponent();
+        }
     }
 }
