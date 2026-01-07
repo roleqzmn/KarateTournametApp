@@ -9,21 +9,21 @@ namespace KarateTournamentApp.Models
         public Guid? WinnerId { get; set; } = null;
         public short AkaScore { get; set; } = 0;
         public short ShiroScore { get; set; } = 0;
-        public bool IsSolo { get; set; } = false;
+        public bool IsFinished { get; set; } = false;
 
-        public Match(Guid? aka, Guid? shiro)
+        public Match(Guid? aka=null, Guid? shiro=null)
         {
-            if (aka == null)
+            Aka = aka;
+            Shiro = shiro;
+            if (Aka != null && Shiro == null)
             {
-                Shiro = shiro;
-                WinnerId = shiro;
-                IsSolo = true;
+                WinnerId = Aka;
+                IsFinished = true;
             }
-            if (shiro == null)
+            else if (Shiro != null && Aka == null)
             {
-                Aka = aka;
-                WinnerId = aka;
-                IsSolo = true;
+                WinnerId = Shiro;
+                IsFinished = true;
             }
         }
     }

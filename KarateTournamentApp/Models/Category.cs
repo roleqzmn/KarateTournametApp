@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices.JavaScript;
 using System.Security.Policy;
 
 namespace KarateTournamentApp.Models
@@ -24,7 +25,7 @@ namespace KarateTournamentApp.Models
         public Sex Sex { get; set; }
         public CategoryType CategoryType { get; set; }
 
-        public Category(string name, Belts belt, CategoryType type, Sex sex = Sex.Unisex, int? age=null)
+        public Category(string name, Belts belt, CategoryType type, Sex sex = Sex.Unisex, int? age = null)
         {
             Name = name;
             MinAge = age;
@@ -67,10 +68,40 @@ namespace KarateTournamentApp.Models
 
             int parentIndex = (currentMatchIndex - 1) / 2;
             var winnerId = BracketMatches[currentMatchIndex].WinnerId;
-            if (currentMatchIndex % 2 != 0) 
+            if (currentMatchIndex % 2 != 0)
                 BracketMatches[parentIndex].Aka = winnerId;
             else
                 BracketMatches[parentIndex].Shiro = winnerId;
+        }
+
+        /// <summary>
+        /// Initializes a bracket, semi-randomly
+        /// </summary>
+        public void InitializeBracket()
+        {
+            BracketMatches = new List<Match>();
+            var size = Participants.Count;
+            int leafs = 1;
+            while (leafs < size) leafs = 2 * leafs;
+
+            int totalMatches = 2 * leafs - 1;
+            for (int j = 0; j < totalMatches; j++)
+            {
+                BracketMatches.Add(new Match());
+            }
+
+            var shuffledParticipants = Participants.OrderBy(a => Guid.NewGuid()).ToList(); //pseudo shuffling by guid
+
+            for (int i = 0; i < size; i++)
+            {
+                int bracketIndex = (leafs - 1) + i;
+                BracketMatches[bracketIndex].Aka = shuffledParticipants[i].Id;
+
+                if (BracketMatches[bracketIndex].IsFinished)
+                {
+                    PromoteWinner(bracketIndex);
+                }
+            }
         }
     }
 }
