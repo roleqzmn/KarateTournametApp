@@ -15,6 +15,12 @@ namespace KarateTournamentApp.Models
         Kyu1 = 1,
         Dan=0
     }
+    public enum Sex
+    {
+        Male = 1,
+        Female = 2,
+        Unisex = 3
+    }
     public class Participant
     {
         public Guid Id { get; } = Guid.NewGuid();
@@ -25,10 +31,12 @@ namespace KarateTournamentApp.Models
         public Belts Belt { get; set; }
         public List<Guid> MatchHistory { get; set; } = new List<Guid>();
         public string FullName => $"{FirstName} {LastName}";
+        public Sex Sex { get ; set; }
+        public List<CategoryType> Categories { get; set; }
 
-        public Participant(string firstName, string lastName, int age, Belts belt, string? club=null)
+        public Participant(string firstName, string lastName, int age, Belts belt, Sex sex, List<CategoryType> categories, string? club=null)
         {
-            FirstName = firstName ; LastName = lastName ; Age = age ; Belt = belt ; Club = club ;
+            FirstName = firstName ; LastName = lastName ; Age = age ; Belt = belt ; Club = club ; Sex = sex ; Categories = categories ;
         }
     }
 }
