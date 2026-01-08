@@ -10,7 +10,7 @@ namespace KarateTournamentApp.Models
         public short AkaScore { get; set; } = 0;
         public short ShiroScore { get; set; } = 0;
         public bool IsFinished { get; set; } = false;
-
+        public bool IsDisqualification { get; set; } = false;
         public Match(Guid? aka=null, Guid? shiro=null)
         {
             Aka = aka;
@@ -26,5 +26,13 @@ namespace KarateTournamentApp.Models
                 IsFinished = true;
             }
         }
+    }
+
+    public class ShobuSanbonMatch : Match
+    {
+        double time = 3;
+        int penaltyAka = 0;
+        int penaltyShiro = 0;
+        public ShobuSanbonMatch(Guid? aka = null, Guid? shiro = null) : base(aka, shiro) {}
     }
 }

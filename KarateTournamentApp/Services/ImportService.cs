@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KarateTournamentApp.Services
 {
-    internal class FightLogic
+    internal class ImportService
     {
     }
 }

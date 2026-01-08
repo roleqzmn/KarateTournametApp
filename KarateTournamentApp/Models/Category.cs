@@ -104,4 +104,40 @@ namespace KarateTournamentApp.Models
             }
         }
     }
+
+    public class ShobuSanbonCategory : Category
+    {
+        public ShobuSanbonCategory(string name, Belts belt, CategoryType type,  Sex sex = Sex.Unisex, int? age = null) : base(name, belt, type, sex, age)
+        {  
+        }
+        /// <summary>
+        /// Initializes a bracket, semi-randomly
+        /// </summary>
+        public void InitializeBracket()
+        {
+            BracketMatches = new List<Match>();
+            var size = Participants.Count;
+            int leafs = 1;
+            while (leafs < size) leafs = 2 * leafs;
+
+            int totalMatches = 2 * leafs - 1;
+            for (int j = 0; j < totalMatches; j++)
+            {
+                BracketMatches.Add(new ShobuSanbonMatch());
+            }
+
+            var shuffledParticipants = Participants.OrderBy(a => Guid.NewGuid()).ToList(); //pseudo shuffling by guid
+
+            for (int i = 0; i < size; i++)
+            {
+                int bracketIndex = (leafs - 1) + i;
+                BracketMatches[bracketIndex].Aka = shuffledParticipants[i].Id;
+
+                if (BracketMatches[bracketIndex].IsFinished)
+                {
+                    PromoteWinner(bracketIndex);
+                }
+            }
+        }
+    }
 }

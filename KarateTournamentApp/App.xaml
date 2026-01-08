@@ -1,8 +1,10 @@
 ﻿<Application x:Class="KarateTournamentApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:KarateTournamentApp">
+             xmlns:local="clr-namespace:KarateTournamentApp"
+             xmlns:converters="clr-namespace:KarateTournamentApp.Converters">
     <Application.Resources>
-         
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:ExpanderIconConverter x:Key="ExpanderIconConverter"/>
     </Application.Resources>
 </Application>

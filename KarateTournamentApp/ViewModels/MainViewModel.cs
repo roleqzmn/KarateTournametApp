@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows;
 using KarateTournamentApp.Models;
 using KarateTournamentApp.Services;
 
@@ -34,6 +35,19 @@ namespace KarateTournamentApp.ViewModels
 
         public ObservableCollection<Participant> AllParticipants { get; set; }
 
+        public ObservableCollection<CategoryViewModel> Categories { get; set; }
+
+        private CategoryViewModel _selectedCategoryForMerge;
+        public CategoryViewModel SelectedCategoryForMerge
+        {
+            get => _selectedCategoryForMerge;
+            set
+            {
+                _selectedCategoryForMerge = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand AddParticipantCommand { get; }
 
         public MainViewModel(CategoryManager categoryManager)
@@ -51,6 +65,7 @@ namespace KarateTournamentApp.ViewModels
             };
 
             AllParticipants = new ObservableCollection<Participant>();
+            Categories = new ObservableCollection<CategoryViewModel>();
 
             AddParticipantCommand = new RelayCommand(o => CreateParticipant(), o => CanCreateParticipant());
         }
@@ -83,7 +98,65 @@ namespace KarateTournamentApp.ViewModels
             _categoryManager.AssignParticipant(newParticipant);
             AllParticipants.Add(newParticipant);
 
+            RefreshCategories();
             ResetForm();
+        }
+
+        private void RefreshCategories()
+        {
+            Categories.Clear();
+            foreach (var category in _categoryManager.DefinedCategories)
+            {
+                Categories.Add(new CategoryViewModel(category, OnMergeRequested));
+            }
+        }
+
+        private void OnMergeRequested(CategoryViewModel requestingCategory)
+        {
+            if (SelectedCategoryForMerge == null)
+            {
+                SelectedCategoryForMerge = requestingCategory;
+                MessageBox.Show($"Kategoria '{requestingCategory.Name}' wybrana do połączenia.\n\nKliknij przycisk połączenia w innej kategorii tego samego typu, aby je scalić.",
+                    "Wybrano kategorię", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else if (SelectedCategoryForMerge == requestingCategory)
+            {
+                SelectedCategoryForMerge = null;
+                MessageBox.Show("Anulowano wybór kategorii.", "Anulowano", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                if (SelectedCategoryForMerge.Category.CategoryType != requestingCategory.Category.CategoryType)
+                {
+                    MessageBox.Show("Nie można połączyć kategorii różnych typów!\n\n" +
+                        $"Wybrana: {SelectedCategoryForMerge.CategoryTypeDisplay}\n" +
+                        $"Druga: {requestingCategory.CategoryTypeDisplay}",
+                        "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                    SelectedCategoryForMerge = null;
+                    return;
+                }
+
+                var result = MessageBox.Show(
+                    $"Czy na pewno chcesz połączyć kategorie:\n\n" +
+                    $"'{SelectedCategoryForMerge.Name}'\n" +
+                    $"Zawodnicy: {SelectedCategoryForMerge.ParticipantCount}\n\n" +
+                    $"z\n\n" +
+                    $"'{requestingCategory.Name}'\n" +
+                    $"Zawodnicy: {requestingCategory.ParticipantCount}\n\n" +
+                    $"Po połączeniu: {SelectedCategoryForMerge.ParticipantCount + requestingCategory.ParticipantCount} zawodników",
+                    "Potwierdź połączenie", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    requestingCategory.Category.MergeWith(SelectedCategoryForMerge.Category);
+                    _categoryManager.DefinedCategories.Remove(SelectedCategoryForMerge.Category);
+                    
+                    SelectedCategoryForMerge = null;
+                    RefreshCategories();
+                    
+                    MessageBox.Show("Kategorie zostały pomyślnie połączone!", "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
         }
 
         private void ResetForm()

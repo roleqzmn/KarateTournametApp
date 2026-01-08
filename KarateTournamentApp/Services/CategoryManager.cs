@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using KarateTournamentApp.Models;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using KarateTournamentApp.Models;
+using System.Xml.Linq;
 
 namespace KarateTournamentApp.Services
 {
@@ -13,7 +14,7 @@ namespace KarateTournamentApp.Services
         {
             foreach (var categoryType in p.Categories)
             {
-                var targetCategory = DefinedCategories.First(c =>
+                var targetCategory = DefinedCategories.FirstOrDefault(c =>
                     p.Age >= c.MinAge &&
                     p.Age <= c.MaxAge &&
                     c.AllowedBelts.Contains(p.Belt) &&
@@ -26,11 +27,33 @@ namespace KarateTournamentApp.Services
                 }
                 else
                 {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append(p.Belt.ToString());
-                    sb.Append(p.Age.ToString());
-                    string name = sb.ToString();
-                    DefinedCategories.Add(new Category(name, p.Belt, categoryType, p.Sex, p.Age));
+                    if(p.Age>=18)
+                    {
+                        var cat = new Category("Senior", p.Belt, categoryType, p.Sex, 18);
+                        if (categoryType == CategoryType.Kumite)
+                        {
+                            cat = new ShobuSanbonCategory("Senior", p.Belt, categoryType, p.Sex, 18);
+                        }
+                        cat.MaxAge = 99;
+                        cat.Participants.Add(p);
+                        DefinedCategories.Add(cat);
+                    }
+                    else
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append(p.Belt.ToString());
+                        sb.Append(" ");
+                        sb.Append(p.Age.ToString());
+                        string name = sb.ToString();
+                        var cat = new Category(name, p.Belt, categoryType, p.Sex, p.Age);
+                        if (categoryType == CategoryType.Kumite)
+                        {
+                            cat = new ShobuSanbonCategory(name, p.Belt, categoryType, p.Sex, p.Age);
+                        }
+                        cat.Participants.Add(p);
+                        DefinedCategories.Add(cat);
+                    }
+                    
                 }
             }
         }
