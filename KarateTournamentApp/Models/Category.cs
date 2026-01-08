@@ -113,6 +113,10 @@ namespace KarateTournamentApp.Models
                 }
             }
         }
+        public void ConductCategory()
+        {
+
+        }
     }
 
     public class ShobuSanbonCategory : Category
@@ -151,6 +155,10 @@ namespace KarateTournamentApp.Models
                     PromoteWinner(bracketIndex);
                 }
             }
+        }
+        public void ConductCategory()
+        {
+
         }
     }
 }

@@ -24,7 +24,7 @@ namespace KarateTournamentApp.Services
                 if (p.Age < 18)
                 {
                     var targetCategory = DefinedCategories.FirstOrDefault(c =>
-                    c.MaxAge>18 &&
+                    c.MaxAge<18 &&
                     c.AllowedBelts.Contains(p.Belt) &&
                     (p.Sex == c.Sex || c.Sex == Sex.Unisex) &&
                     categoryType == c.CategoryType);

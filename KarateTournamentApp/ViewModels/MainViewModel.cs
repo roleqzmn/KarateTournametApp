@@ -28,8 +28,8 @@ namespace KarateTournamentApp.ViewModels
         private Belts _selectedBelt;
         public Belts SelectedBelt { get => _selectedBelt; set { _selectedBelt = value; OnPropertyChanged(); } }
 
-        private string _club;
-        public string Club { get => _club; set { _club = value; OnPropertyChanged(); } }
+        private string? _club;
+        public string? Club { get => _club; set { _club = value; OnPropertyChanged(); } }
 
         private bool _divideByAge;
         public bool DivideByAge 
