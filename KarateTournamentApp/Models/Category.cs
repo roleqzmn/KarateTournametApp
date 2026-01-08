@@ -48,7 +48,7 @@ namespace KarateTournamentApp.Models
                     Participants.Add(participant);
                 }
             }
-
+            if (Sex != otherCategory.Sex) Sex = Sex.Unisex;
             if (otherCategory.MinAge < this.MinAge) this.MinAge = otherCategory.MinAge;
             if (otherCategory.MaxAge > this.MaxAge) this.MaxAge = otherCategory.MaxAge;
 
