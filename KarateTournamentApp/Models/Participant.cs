@@ -1,4 +1,6 @@
 ﻿
+using System.Text.Json.Serialization;
+
 namespace KarateTournamentApp.Models
 {
     public enum Belts
@@ -34,6 +36,7 @@ namespace KarateTournamentApp.Models
         public Sex Sex { get ; set; }
         public List<CategoryType> Categories { get; set; }
 
+        [JsonConstructor]
         public Participant(string firstName, string lastName, int age, Belts belt, Sex sex, List<CategoryType> categories, string? club=null)
         {
             FirstName = firstName ; LastName = lastName ; Age = age ; Belt = belt ; Club = club ; Sex = sex ; Categories = categories ;

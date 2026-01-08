@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.InteropServices.JavaScript;
 using System.Security.Policy;
+using System.Text.Json.Serialization;
 
 namespace KarateTournamentApp.Models
 {
@@ -13,6 +14,9 @@ namespace KarateTournamentApp.Models
         KobudoLong,
         Grappling
     }
+
+    [JsonDerivedType(typeof(Category), typeDiscriminator: "base")]
+    [JsonDerivedType(typeof(ShobuSanbonCategory), typeDiscriminator: "shobu")]
     public class Category
     {
         public string Name { get; set; }
@@ -35,6 +39,7 @@ namespace KarateTournamentApp.Models
             CategoryType = type;
         }
 
+        [JsonConstructor]
         public Category(string name, List<Belts> belts, CategoryType type, Sex sex = Sex.Unisex, int? age = null)
         {
             Name = name;
@@ -124,6 +129,8 @@ namespace KarateTournamentApp.Models
         public ShobuSanbonCategory(string name, Belts belt, CategoryType type,  Sex sex = Sex.Unisex, int? age = null) : base(name, belt, type, sex, age)
         {  
         }
+
+        [JsonConstructor]
         public ShobuSanbonCategory(string name, List<Belts> belts, CategoryType type, Sex sex = Sex.Unisex, int? age = null) : base(name, belts, type, sex, age)
         {
         }

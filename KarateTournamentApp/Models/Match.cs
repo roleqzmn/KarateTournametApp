@@ -1,4 +1,6 @@
 ﻿
+using System.Text.Json.Serialization;
+
 namespace KarateTournamentApp.Models
 {
     public class Match
@@ -11,6 +13,8 @@ namespace KarateTournamentApp.Models
         public short ShiroScore { get; set; } = 0;
         public bool IsFinished { get; set; } = false;
         public bool IsDisqualification { get; set; } = false;
+
+        [JsonConstructor]
         public Match(Guid? aka=null, Guid? shiro=null)
         {
             Aka = aka;
@@ -33,6 +37,8 @@ namespace KarateTournamentApp.Models
         double time = 3;
         int penaltyAka = 0;
         int penaltyShiro = 0;
+
+        [JsonConstructor]
         public ShobuSanbonMatch(Guid? aka = null, Guid? shiro = null) : base(aka, shiro) {}
     }
 }
