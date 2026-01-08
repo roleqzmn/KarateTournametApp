@@ -35,6 +35,16 @@ namespace KarateTournamentApp.Models
             CategoryType = type;
         }
 
+        public Category(string name, List<Belts> belts, CategoryType type, Sex sex = Sex.Unisex, int? age = null)
+        {
+            Name = name;
+            MinAge = age;
+            MaxAge = age;
+            AllowedBelts = belts;
+            Sex = sex;
+            CategoryType = type;
+        }
+
         /// <summary>
         /// Combines the passed category with the current one.
         /// </summary>
@@ -109,6 +119,9 @@ namespace KarateTournamentApp.Models
     {
         public ShobuSanbonCategory(string name, Belts belt, CategoryType type,  Sex sex = Sex.Unisex, int? age = null) : base(name, belt, type, sex, age)
         {  
+        }
+        public ShobuSanbonCategory(string name, List<Belts> belts, CategoryType type, Sex sex = Sex.Unisex, int? age = null) : base(name, belts, type, sex, age)
+        {
         }
         /// <summary>
         /// Initializes a bracket, semi-randomly

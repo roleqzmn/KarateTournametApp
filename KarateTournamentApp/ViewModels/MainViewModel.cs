@@ -31,6 +31,30 @@ namespace KarateTournamentApp.ViewModels
         private string _club;
         public string Club { get => _club; set { _club = value; OnPropertyChanged(); } }
 
+        private bool _divideByAge;
+        public bool DivideByAge 
+        { 
+            get => _divideByAge; 
+            set 
+            { 
+                _divideByAge = value; 
+                OnPropertyChanged();
+                CommandManager.InvalidateRequerySuggested();
+            } 
+        }
+
+        private bool _divideByBelt;
+        public bool DivideByBelt 
+        { 
+            get => _divideByBelt; 
+            set 
+            { 
+                _divideByBelt = value; 
+                OnPropertyChanged();
+                CommandManager.InvalidateRequerySuggested();
+            } 
+        }
+
         public ObservableCollection<CategorySelectionItem> CategorySelections { get; set; }
 
         public ObservableCollection<Participant> AllParticipants { get; set; }
@@ -75,7 +99,8 @@ namespace KarateTournamentApp.ViewModels
             return !string.IsNullOrWhiteSpace(FirstName) &&
                    !string.IsNullOrWhiteSpace(LastName) &&
                    Age.HasValue && Age > 0 &&
-                   CategorySelections.Any(c => c.IsSelected);
+                   CategorySelections.Any(c => c.IsSelected) &&
+                   (DivideByAge || DivideByBelt);
         }
 
         private void CreateParticipant()
@@ -95,7 +120,7 @@ namespace KarateTournamentApp.ViewModels
                 Club
             );
 
-            _categoryManager.AssignParticipant(newParticipant);
+            _categoryManager.AssignParticipant(newParticipant, DivideByBelt, DivideByAge);
             AllParticipants.Add(newParticipant);
 
             RefreshCategories();
