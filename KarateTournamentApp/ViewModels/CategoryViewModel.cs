@@ -13,6 +13,7 @@ namespace KarateTournamentApp.ViewModels
             _category = category;
             _mergeRequestCallback = mergeRequestCallback;
             MergeCommand = new RelayCommand(o => RequestMerge(), o => true);
+            RemoveParticipantCommand = new RelayCommand(RemoveParticipant, o => true);
         }
 
         public Category Category => _category;
@@ -47,10 +48,21 @@ namespace KarateTournamentApp.ViewModels
         }
 
         public ICommand MergeCommand { get; }
+        public ICommand RemoveParticipantCommand { get; }
 
         private void RequestMerge()
         {
             _mergeRequestCallback?.Invoke(this);
+        }
+
+        private void RemoveParticipant(object parameter)
+        {
+            if (parameter is Participant participant)
+            {
+                _category.Participants.Remove(participant);
+                OnPropertyChanged(nameof(ParticipantCount));
+                Refresh();
+            }
         }
 
         public void Refresh()

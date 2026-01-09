@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.InteropServices.JavaScript;
 using System.Security.Policy;
 using System.Text.Json.Serialization;
@@ -20,7 +21,7 @@ namespace KarateTournamentApp.Models
     public class Category
     {
         public string Name { get; set; }
-        public List<Participant> Participants { get; set; } = new List<Participant>();
+        public ObservableCollection<Participant> Participants { get; set; } = new ObservableCollection<Participant>();
         public List<Belts> AllowedBelts { get; set; } = new List<Belts> { };
         public List<Match> BracketMatches { get; set; } = new List<Match>();
         public int? MinAge { get; set; }
