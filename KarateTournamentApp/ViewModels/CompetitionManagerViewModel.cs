@@ -47,7 +47,7 @@ namespace KarateTournamentApp.ViewModels
         {
             _category = category;
             
-            // Initialize bracket if not already done
+            // Initialize bracket if not already done~~
             if (!_category.BracketMatches.Any())
             {
                 _category.InitializeBracket();
@@ -114,7 +114,7 @@ namespace KarateTournamentApp.ViewModels
                 {
                     CurrentMatch.WinnerId = CurrentMatch.Shiro;
                 }
-                // In case of tie, you might want different logic
+                // TODO: Senshu/+1min if draw
                 
                 CurrentMatch.IsFinished = true;
                 OnPropertyChanged(nameof(CurrentMatch));

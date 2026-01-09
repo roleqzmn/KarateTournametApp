@@ -30,6 +30,7 @@ namespace KarateTournamentApp.ViewModels
                 
                 // Reset judge scores for new participant
                 JudgeScores.Clear();
+                IsParticipantFinished = false;
                 OnPropertyChanged(nameof(FinalScore));
             }
         }
@@ -40,19 +41,31 @@ namespace KarateTournamentApp.ViewModels
         // Collection to store scores from multiple judges
         public ObservableCollection<decimal> JudgeScores { get; set; }
 
-        // Calculate final score (remove highest and lowest, then average)
+        private bool _isParticipantFinished;
+        public bool IsParticipantFinished
+        {
+            get => _isParticipantFinished;
+            set
+            {
+                _isParticipantFinished = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FinalScore));
+            }
+        }
+
+        // Calculate final score (remove highest and lowest, then sum)
         public decimal FinalScore
         {
             get
             {
-                if (JudgeScores.Count < 3) return 0;
+                if (!IsParticipantFinished || JudgeScores.Count < 3) return 0;
                 
                 var sortedScores = JudgeScores.OrderBy(s => s).ToList();
                 // Remove lowest and highest
                 sortedScores.RemoveAt(0);
                 sortedScores.RemoveAt(sortedScores.Count - 1);
                 
-                return sortedScores.Any() ? sortedScores.Average() : 0;
+                return sortedScores.Sum();
             }
         }
 
@@ -112,6 +125,8 @@ namespace KarateTournamentApp.ViewModels
         {
             if (CurrentParticipant != null && JudgeScores.Count >= 3)
             {
+                IsParticipantFinished = true;
+                
                 var result = new ParticipantResult
                 {
                     Participant = CurrentParticipant,

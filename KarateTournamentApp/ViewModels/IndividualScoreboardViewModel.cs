@@ -23,6 +23,8 @@ namespace KarateTournamentApp.ViewModels
         public string ProgressText => $"{CurrentNumber} / {TotalParticipants}";
 
         public decimal FinalScore => _competitionManager.FinalScore;
+        public System.Collections.ObjectModel.ObservableCollection<decimal> JudgeScores => _competitionManager.JudgeScores;
+        public bool IsParticipantFinished => _competitionManager.IsParticipantFinished;
 
         public IndividualScoreboardViewModel(IndividualCompetitionManagerViewModel competitionManager)
         {
@@ -40,12 +42,14 @@ namespace KarateTournamentApp.ViewModels
             OnPropertyChanged(nameof(CurrentNumber));
             OnPropertyChanged(nameof(TotalParticipants));
             OnPropertyChanged(nameof(ProgressText));
+            OnPropertyChanged(nameof(IsParticipantFinished));
             RefreshScores();
         }
 
         private void RefreshScores()
         {
             OnPropertyChanged(nameof(FinalScore));
+            OnPropertyChanged(nameof(JudgeScores));
         }
     }
 }

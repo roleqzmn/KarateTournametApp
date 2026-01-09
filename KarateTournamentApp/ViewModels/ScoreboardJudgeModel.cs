@@ -101,8 +101,6 @@ namespace KarateTournamentApp.ViewModels
         private void AddJudgeScore(object parameter)
         {
             // Logic for adding judge scores in Kata/Kumite categories
-            // This would involve collecting scores from multiple judges
-            // and calculating final scores (removing highest and lowest)
         }
 
         private void RefreshAll()

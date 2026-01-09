@@ -7,34 +7,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="900"
              Background="#F0F0F0">
-    <UserControl.Resources>
-        <Style x:Key="QuickScoreButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#1ABC9C"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontSize" Value="18"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Padding" Value="20,15"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="5"
-                                Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#16A085"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -45,7 +17,7 @@
         <!-- Header -->
         <Border Grid.Row="0" Background="#2C3E50" CornerRadius="5" Padding="15" Margin="0,0,0,20">
             <StackPanel>
-                <TextBlock Text="Panel Sedziowski - Konkurencja Indywidualna" 
+                <TextBlock Text="Panel Sedziowski" 
                            FontSize="24" 
                            FontWeight="Bold" 
                            Foreground="White"
@@ -78,9 +50,10 @@
                                 BorderBrush="#27AE60" 
                                 BorderThickness="2"
                                 CornerRadius="5" 
-                                Padding="15">
+                                Padding="15"
+                                Visibility="{Binding IsParticipantFinished, Converter={StaticResource BoolToVisibilityConverter}}">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="Wynik koncowy: " 
+                                <TextBlock Text="Wynik koncowy (suma): " 
                                            FontSize="24" 
                                            FontWeight="SemiBold"
                                            Foreground="#27AE60"
@@ -123,21 +96,6 @@
                             </StackPanel>
                         </GroupBox>
 
-                        <!-- Quick Score Buttons -->
-                        <GroupBox Header="Szybkie oceny" Padding="15">
-                            <WrapPanel HorizontalAlignment="Center">
-                                <Button Content="6.0" Command="{Binding AddQuickScoreCommand}" CommandParameter="6.0" Style="{StaticResource QuickScoreButtonStyle}"/>
-                                <Button Content="6.5" Command="{Binding AddQuickScoreCommand}" CommandParameter="6.5" Style="{StaticResource QuickScoreButtonStyle}"/>
-                                <Button Content="7.0" Command="{Binding AddQuickScoreCommand}" CommandParameter="7.0" Style="{StaticResource QuickScoreButtonStyle}"/>
-                                <Button Content="7.5" Command="{Binding AddQuickScoreCommand}" CommandParameter="7.5" Style="{StaticResource QuickScoreButtonStyle}"/>
-                                <Button Content="8.0" Command="{Binding AddQuickScoreCommand}" CommandParameter="8.0" Style="{StaticResource QuickScoreButtonStyle}"/>
-                                <Button Content="8.5" Command="{Binding AddQuickScoreCommand}" CommandParameter="8.5" Style="{StaticResource QuickScoreButtonStyle}"/>
-                                <Button Content="9.0" Command="{Binding AddQuickScoreCommand}" CommandParameter="9.0" Style="{StaticResource QuickScoreButtonStyle}"/>
-                                <Button Content="9.5" Command="{Binding AddQuickScoreCommand}" CommandParameter="9.5" Style="{StaticResource QuickScoreButtonStyle}"/>
-                                <Button Content="10.0" Command="{Binding AddQuickScoreCommand}" CommandParameter="10.0" Style="{StaticResource QuickScoreButtonStyle}"/>
-                            </WrapPanel>
-                        </GroupBox>
-
                         <!-- Current Judge Scores -->
                         <GroupBox Header="Oceny sedziow" Padding="15" Margin="0,15,0,0">
                             <StackPanel>
@@ -162,14 +120,24 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                                 
-                                <Button Content="Usun ostatnia ocene" 
-                                        Command="{Binding RemoveLastScoreCommand}"
-                                        Background="#E74C3C"
-                                        Foreground="White"
-                                        FontWeight="SemiBold"
-                                        Padding="10"
-                                        Margin="0,15,0,0"
-                                        Cursor="Hand"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
+                                    <Button Content="Pokaz wynik koncowy" 
+                                            Command="{Binding ShowFinalScoreCommand}"
+                                            Background="#F39C12"
+                                            Foreground="White"
+                                            FontWeight="SemiBold"
+                                            Padding="15,10"
+                                            Margin="0,0,10,0"
+                                            Cursor="Hand"/>
+                                    
+                                    <Button Content="Usun ostatnia ocene" 
+                                            Command="{Binding RemoveLastScoreCommand}"
+                                            Background="#E74C3C"
+                                            Foreground="White"
+                                            FontWeight="SemiBold"
+                                            Padding="15,10"
+                                            Cursor="Hand"/>
+                                </StackPanel>
                             </StackPanel>
                         </GroupBox>
                     </StackPanel>

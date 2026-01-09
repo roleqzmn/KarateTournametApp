@@ -19,6 +19,7 @@ namespace KarateTournamentApp.ViewModels
         
         public ObservableCollection<decimal> JudgeScores => _competitionManager.JudgeScores;
         public decimal FinalScore => _competitionManager.FinalScore;
+        public bool IsParticipantFinished => _competitionManager.IsParticipantFinished;
 
         // Commands
         public ICommand AddScoreCommand { get; }
@@ -26,9 +27,7 @@ namespace KarateTournamentApp.ViewModels
         public ICommand FinishParticipantCommand { get; }
         public ICommand NextParticipantCommand { get; }
         public ICommand ShowResultsCommand { get; }
-
-        // For quick score entry buttons
-        public ICommand AddQuickScoreCommand { get; }
+        public ICommand ShowFinalScoreCommand { get; }
 
         private string _scoreInput;
         public string ScoreInput
@@ -50,9 +49,8 @@ namespace KarateTournamentApp.ViewModels
             FinishParticipantCommand = _competitionManager.FinishParticipantCommand;
             NextParticipantCommand = _competitionManager.NextParticipantCommand;
             ShowResultsCommand = new RelayCommand(o => ShowResults());
-            AddQuickScoreCommand = new RelayCommand(AddQuickScore);
+            ShowFinalScoreCommand = new RelayCommand(o => ShowFinalScore(), o => CanShowFinalScore());
 
-            // Subscribe to changes
             _competitionManager.PropertyChanged += (s, e) => RefreshAll();
             _competitionManager.JudgeScores.CollectionChanged += (s, e) => RefreshScores();
         }
@@ -67,20 +65,6 @@ namespace KarateTournamentApp.ViewModels
                     ScoreInput = string.Empty;
                     RefreshScores();
                 }
-            }
-        }
-
-        private void AddQuickScore(object parameter)
-        {
-            if (parameter is decimal score)
-            {
-                JudgeScores.Add(score);
-                RefreshScores();
-            }
-            else if (parameter is string scoreText && decimal.TryParse(scoreText, out decimal parsedScore))
-            {
-                JudgeScores.Add(parsedScore);
-                RefreshScores();
             }
         }
 
@@ -100,10 +84,23 @@ namespace KarateTournamentApp.ViewModels
             resultsWindow.ShowDialog();
         }
 
+        private bool CanShowFinalScore()
+        {
+            return JudgeScores.Count >= 3;
+        }
+
+        private void ShowFinalScore()
+        {
+            // Temporarily finish participant to calculate and show final score
+            _competitionManager.IsParticipantFinished = true;
+            RefreshScores();
+        }
+
         private void RefreshAll()
         {
             OnPropertyChanged(nameof(CurrentParticipantName));
             OnPropertyChanged(nameof(CategoryName));
+            OnPropertyChanged(nameof(IsParticipantFinished));
             RefreshScores();
         }
 

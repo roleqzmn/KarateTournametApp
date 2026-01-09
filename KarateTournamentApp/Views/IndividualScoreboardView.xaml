@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:KarateTournamentApp.Views"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1200"
-             Background="#1a1a1a">
+             Background="White">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,16 +15,16 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Border Grid.Row="0" Background="#2C3E50" Padding="20">
+        <Border Grid.Row="0" Background="#34495E" Padding="20">
             <StackPanel>
                 <TextBlock Text="{Binding CategoryName}" 
-                           FontSize="36" 
+                           FontSize="38" 
                            FontWeight="Bold" 
                            Foreground="White"
                            HorizontalAlignment="Center"/>
                 <TextBlock Text="{Binding CategoryType}" 
                            FontSize="24" 
-                           Foreground="#95a5a6"
+                           Foreground="#ECF0F1"
                            HorizontalAlignment="Center"
                            Margin="0,5,0,0"/>
             </StackPanel>
@@ -32,57 +32,81 @@
 
         <!-- Main content -->
         <Grid Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <!-- Progress indicator -->
-            <Border Grid.Row="0" Background="#34495E" Margin="40,40,40,20" Padding="20" CornerRadius="10">
-                <StackPanel>
-                    <TextBlock Text="Zawodnik" 
-                               FontSize="24" 
-                               Foreground="#95a5a6"
-                               HorizontalAlignment="Center"/>
-                    <TextBlock Text="{Binding ProgressText}" 
-                               FontSize="48" 
-                               FontWeight="Bold"
-                               Foreground="#1ABC9C"
-                               HorizontalAlignment="Center"
-                               Margin="0,10,0,0"/>
-                </StackPanel>
-            </Border>
-
             <!-- Participant info and score -->
-            <Border Grid.Row="1" Background="#2C3E50" Margin="40,0,40,40" Padding="40" CornerRadius="10">
+            <Border Background="White" Margin="30,25,30,25" Padding="35,20,35,30" CornerRadius="15" BorderBrush="#E0E0E0" BorderThickness="2">
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="{Binding CurrentParticipantName}" 
-                               FontSize="64" 
+                               FontSize="52" 
                                FontWeight="Bold" 
-                               Foreground="White"
+                               Foreground="#2C3E50"
                                TextAlignment="Center"
                                TextWrapping="Wrap"
-                               Margin="0,0,0,20"/>
-                    
+                               Margin="0,0,0,8"/>
+
                     <TextBlock Text="{Binding CurrentParticipantClub}" 
-                               FontSize="32" 
-                               Foreground="#95a5a6"
+                               FontSize="26" 
+                               Foreground="#7F8C8D"
+                               FontWeight="SemiBold"
                                TextAlignment="Center"
-                               Margin="0,0,0,60"/>
+                               Margin="0,0,0,40"/>
+
+                    <!-- Judge Scores Display -->
+                    <Border Background="#F8F9FA" 
+                            CornerRadius="15" 
+                            Padding="35,25"
+                            HorizontalAlignment="Center"
+                            Margin="0,0,0,25"
+                            BorderBrush="#3498DB" 
+                            BorderThickness="3">
+                        <StackPanel>
+                            <TextBlock Text="OCENY SEDZIOW" 
+                                       FontSize="32" 
+                                       Foreground="#2C3E50"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,20"/>
+                            <ItemsControl ItemsSource="{Binding JudgeScores}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel HorizontalAlignment="Center"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#3498DB" 
+                                                CornerRadius="15" 
+                                                Padding="32,20"
+                                                Margin="10"
+                                                BorderBrush="#2980B9"
+                                                BorderThickness="3">
+                                            <TextBlock Text="{Binding StringFormat={}{0:F1}}" 
+                                                       FontSize="56"
+                                                       FontWeight="Bold"
+                                                       Foreground="White"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
 
                     <!-- Final Score Display -->
                     <Border Background="#27AE60" 
-                            CornerRadius="15" 
+                            CornerRadius="18" 
                             Padding="40,30"
-                            HorizontalAlignment="Center">
+                            HorizontalAlignment="Center"
+                            Visibility="{Binding IsParticipantFinished, Converter={StaticResource BoolToVisibilityConverter}}"
+                            BorderBrush="#229954"
+                            BorderThickness="3">
                         <StackPanel>
-                            <TextBlock Text="WYNIK" 
-                                       FontSize="28" 
+                            <TextBlock Text="WYNIK KONCOWY (SUMA)" 
+                                       FontSize="30" 
                                        Foreground="White"
+                                       FontWeight="Bold"
                                        HorizontalAlignment="Center"
                                        Margin="0,0,0,10"/>
                             <TextBlock Text="{Binding FinalScore, StringFormat={}{0:F2}}" 
-                                       FontSize="96" 
+                                       FontSize="90" 
                                        FontWeight="Bold" 
                                        Foreground="White"
                                        HorizontalAlignment="Center"/>
@@ -93,10 +117,11 @@
         </Grid>
 
         <!-- Footer -->
-        <Border Grid.Row="2" Background="#2C3E50" Padding="15">
+        <Border Grid.Row="2" Background="#34495E" Padding="15">
             <TextBlock Text="Karate Tournament Manager - Individual Competition" 
                        FontSize="20" 
-                       Foreground="#95a5a6"
+                       Foreground="#ECF0F1"
+                       FontWeight="SemiBold"
                        HorizontalAlignment="Center"/>
         </Border>
     </Grid>
