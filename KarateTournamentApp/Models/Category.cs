@@ -29,25 +29,28 @@ namespace KarateTournamentApp.Models
         public Sex Sex { get; set; }
         public CategoryType CategoryType { get; set; }
 
-        public Category(string name, Belts belt, CategoryType type, Sex sex = Sex.Unisex, int? age = null)
+        public Category(string name, Belts belt, CategoryType type, Sex sex = Sex.Unisex, int? minAge = null, int? maxAge = null)
         {
             Name = name;
-            MinAge = age;
-            MaxAge = age;
+            MinAge = minAge;
+            MaxAge = maxAge;
             AllowedBelts.Add(belt);
             Sex = sex;
             CategoryType = type;
         }
 
-        [JsonConstructor]
-        public Category(string name, List<Belts> belts, CategoryType type, Sex sex = Sex.Unisex, int? age = null)
+        public Category(string name, List<Belts> belts, CategoryType type, Sex sex = Sex.Unisex, int? minAge = null, int? maxAge = null)
         {
             Name = name;
-            MinAge = age;
-            MaxAge = age;
-            AllowedBelts = belts;
+            MinAge = minAge;
+            MaxAge = maxAge;
+            AllowedBelts = belts ?? new List<Belts>();
             Sex = sex;
             CategoryType = type;
+        }
+
+        public Category()
+        {
         }
 
         /// <summary>
@@ -126,12 +129,15 @@ namespace KarateTournamentApp.Models
 
     public class ShobuSanbonCategory : Category
     {
-        public ShobuSanbonCategory(string name, Belts belt, CategoryType type,  Sex sex = Sex.Unisex, int? age = null) : base(name, belt, type, sex, age)
+        public ShobuSanbonCategory(string name, Belts belt, CategoryType type,  Sex sex = Sex.Unisex, int? minAge = null, int? maxAge = null) : base(name, belt, type, sex, minAge, maxAge)
         {  
         }
 
-        [JsonConstructor]
-        public ShobuSanbonCategory(string name, List<Belts> belts, CategoryType type, Sex sex = Sex.Unisex, int? age = null) : base(name, belts, type, sex, age)
+        public ShobuSanbonCategory(string name, List<Belts> belts, CategoryType type, Sex sex = Sex.Unisex, int? minAge = null, int? maxAge = null) : base(name, belts, type, sex, minAge, maxAge)
+        {
+        }
+
+        public ShobuSanbonCategory() : base()
         {
         }
         /// <summary>

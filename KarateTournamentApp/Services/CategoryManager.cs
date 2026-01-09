@@ -38,24 +38,22 @@ namespace KarateTournamentApp.Services
                         StringBuilder sb = new StringBuilder();
                         sb.Append(p.Belt.ToString());
                         string name = sb.ToString();
-                        var cat = new Category(name, p.Belt, categoryType, p.Sex, 17);
+                        var cat = new Category(name, p.Belt, categoryType, p.Sex, 1, 17);
                         if (categoryType == CategoryType.Kumite)
                         {
-                            cat = new ShobuSanbonCategory(name, p.Belt, categoryType, p.Sex, 17);
+                            cat = new ShobuSanbonCategory(name, p.Belt, categoryType, p.Sex, 1, 17);
                         }
                         cat.Participants.Add(p);
-                        cat.MinAge = 1;
                         DefinedCategories.Add(cat);
                     }
                 }
                 else
                 {
-                    var cat = new Category("Senior", p.Belt, categoryType, p.Sex, 18);
+                    var cat = new Category("Senior", p.Belt, categoryType, p.Sex, 18, 99);
                     if (categoryType == CategoryType.Kumite)
                     {
-                        cat = new ShobuSanbonCategory("Senior", p.Belt, categoryType, p.Sex, 18);
+                        cat = new ShobuSanbonCategory("Senior", p.Belt, categoryType, p.Sex, 18, 99);
                     }
-                    cat.MaxAge = 99;
                     cat.Participants.Add(p);
                     DefinedCategories.Add(cat);
                 }
@@ -80,12 +78,11 @@ namespace KarateTournamentApp.Services
                 {
                     if (p.Age >= 18)
                     {
-                        var cat = new Category("Senior", belts, categoryType, p.Sex, 18);
+                        var cat = new Category("Senior", belts, categoryType, p.Sex, 18, 99);
                         if (categoryType == CategoryType.Kumite)
                         {
-                            cat = new ShobuSanbonCategory("Senior", belts, categoryType, p.Sex, 18);
+                            cat = new ShobuSanbonCategory("Senior", belts, categoryType, p.Sex, 18, 99);
                         }
-                        cat.MaxAge = 99;
                         cat.Participants.Add(p);
                         DefinedCategories.Add(cat);
                     }
@@ -94,10 +91,10 @@ namespace KarateTournamentApp.Services
                         StringBuilder sb = new StringBuilder();
                         sb.Append(p.Age.ToString());
                         string name = sb.ToString();
-                        var cat = new Category(name, belts, categoryType, p.Sex, p.Age);
+                        var cat = new Category(name, belts, categoryType, p.Sex, p.Age, p.Age);
                         if (categoryType == CategoryType.Kumite)
                         {
-                            cat = new ShobuSanbonCategory(name, belts, categoryType, p.Sex, p.Age);
+                            cat = new ShobuSanbonCategory(name, belts, categoryType, p.Sex, p.Age, p.Age);
                         }
                         cat.Participants.Add(p);
                         DefinedCategories.Add(cat);
@@ -126,12 +123,11 @@ namespace KarateTournamentApp.Services
                     if(p.Age>=18)
                     {
                         List<Belts> belts = Enum.GetValues<Belts>().ToList();
-                        var cat = new Category("Senior", belts, categoryType, p.Sex, 18);
+                        var cat = new Category("Senior", belts, categoryType, p.Sex, 18, 99);
                         if (categoryType == CategoryType.Kumite)
                         {
-                            cat = new ShobuSanbonCategory("Senior", belts, categoryType, p.Sex, 18);
+                            cat = new ShobuSanbonCategory("Senior", belts, categoryType, p.Sex, 18, 99);
                         }
-                        cat.MaxAge = 99;
                         cat.Participants.Add(p);
                         DefinedCategories.Add(cat);
                     }
@@ -142,10 +138,10 @@ namespace KarateTournamentApp.Services
                         sb.Append(" ");
                         sb.Append(p.Age.ToString());
                         string name = sb.ToString();
-                        var cat = new Category(name, p.Belt, categoryType, p.Sex, p.Age);
+                        var cat = new Category(name, p.Belt, categoryType, p.Sex, p.Age, p.Age);
                         if (categoryType == CategoryType.Kumite)
                         {
-                            cat = new ShobuSanbonCategory(name, p.Belt, categoryType, p.Sex, p.Age);
+                            cat = new ShobuSanbonCategory(name, p.Belt, categoryType, p.Sex, p.Age, p.Age);
                         }
                         cat.Participants.Add(p);
                         DefinedCategories.Add(cat);

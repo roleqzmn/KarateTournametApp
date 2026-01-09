@@ -3,30 +3,34 @@ using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-public class JsonService
+namespace KarateTournamentApp.Services
 {
-    private JsonSerializerOptions GetOptions()
+    public class JsonService
     {
-        return new JsonSerializerOptions
+         private JsonSerializerOptions GetOptions()
+         {
+            return new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter() },
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            };
+         }
+
+        public void SaveTournamentData(string filePath, List<Category> categories)
         {
-            WriteIndented = true,
-            Converters = { new JsonStringEnumConverter() },
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        };
-    }
+            string jsonString = JsonSerializer.Serialize(categories, GetOptions());
 
-    public void SaveTournamentData(string filePath, List<Category> categories)
-    {
-        string jsonString = JsonSerializer.Serialize(categories, GetOptions());
+            File.WriteAllText(filePath, jsonString);
+        }
 
-        File.WriteAllText(filePath, jsonString);
-    }
+        public List<Category> LoadTournamentData(string filePath)
+        {
+            if (!File.Exists(filePath)) return new List<Category>();
 
-    public List<Category> LoadTournamentData(string filePath)
-    {
-        if (!File.Exists(filePath)) return new List<Category>();
-
-        string jsonString = File.ReadAllText(filePath);
-        return JsonSerializer.Deserialize<List<Category>>(jsonString, GetOptions());
+            string jsonString = File.ReadAllText(filePath);
+            return JsonSerializer.Deserialize<List<Category>>(jsonString, GetOptions());
+        }
     }
 }

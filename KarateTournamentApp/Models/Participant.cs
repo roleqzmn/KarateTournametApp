@@ -25,7 +25,7 @@ namespace KarateTournamentApp.Models
     }
     public class Participant
     {
-        public Guid Id { get; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string FirstName { get ; set; }
         public string LastName { get; set; }
         public int Age { get; set; }
@@ -36,10 +36,19 @@ namespace KarateTournamentApp.Models
         public Sex Sex { get ; set; }
         public List<CategoryType> Categories { get; set; }
 
-        [JsonConstructor]
-        public Participant(string firstName, string lastName, int age, Belts belt, Sex sex, List<CategoryType> categories, string? club=null)
+        public Participant(string firstName, string lastName, int age, Belts belt, Sex sex, List<CategoryType> categories, string? club = null)
         {
-            FirstName = firstName ; LastName = lastName ; Age = age ; Belt = belt ; Club = club ; Sex = sex ; Categories = categories ;
+            FirstName = firstName;
+            LastName = lastName;
+            Age = age;
+            Belt = belt;
+            Club = club;
+            Sex = sex;
+            Categories = categories;
+        }
+
+        public Participant()
+        {
         }
     }
 }

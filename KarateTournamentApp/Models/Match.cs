@@ -1,8 +1,11 @@
 ﻿
+
 using System.Text.Json.Serialization;
 
 namespace KarateTournamentApp.Models
 {
+    [JsonDerivedType(typeof(Match), typeDiscriminator: "match")]
+    [JsonDerivedType(typeof(ShobuSanbonMatch), typeDiscriminator: "shobuSanbon")]
     public class Match
     {
         public Guid Guid { get; set; } = Guid.NewGuid();
@@ -14,8 +17,11 @@ namespace KarateTournamentApp.Models
         public bool IsFinished { get; set; } = false;
         public bool IsDisqualification { get; set; } = false;
 
-        [JsonConstructor]
-        public Match(Guid? aka=null, Guid? shiro=null)
+        public Match()
+        {
+        }
+
+        public Match(Guid? aka, Guid? shiro)
         {
             Aka = aka;
             Shiro = shiro;
@@ -38,7 +44,12 @@ namespace KarateTournamentApp.Models
         int penaltyAka = 0;
         int penaltyShiro = 0;
 
-        [JsonConstructor]
-        public ShobuSanbonMatch(Guid? aka = null, Guid? shiro = null) : base(aka, shiro) {}
+        public ShobuSanbonMatch() : base()
+        {
+        }
+
+        public ShobuSanbonMatch(Guid? aka, Guid? shiro) : base(aka, shiro)
+        {
+        }
     }
 }

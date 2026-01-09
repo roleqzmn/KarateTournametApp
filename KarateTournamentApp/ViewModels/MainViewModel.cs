@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows;
 using KarateTournamentApp.Models;
 using KarateTournamentApp.Services;
+using System;
 
 namespace KarateTournamentApp.ViewModels
 {
@@ -73,10 +74,15 @@ namespace KarateTournamentApp.ViewModels
         }
 
         public ICommand AddParticipantCommand { get; }
+        public ICommand ImportCommand { get; }
+        public ICommand ExportCommand { get; }
+
+        private readonly JsonService _jsonService;
 
         public MainViewModel(CategoryManager categoryManager)
         {
             _categoryManager = categoryManager;
+            _jsonService = new JsonService();
 
             CategorySelections = new ObservableCollection<CategorySelectionItem>
             {
@@ -92,6 +98,8 @@ namespace KarateTournamentApp.ViewModels
             Categories = new ObservableCollection<CategoryViewModel>();
 
             AddParticipantCommand = new RelayCommand(o => CreateParticipant(), o => CanCreateParticipant());
+            ImportCommand = new RelayCommand(o => ImportData());
+            ExportCommand = new RelayCommand(o => ExportData(), o => _categoryManager.DefinedCategories.Any());
         }
 
         private bool CanCreateParticipant()
@@ -134,6 +142,7 @@ namespace KarateTournamentApp.ViewModels
             {
                 Categories.Add(new CategoryViewModel(category, OnMergeRequested));
             }
+            CommandManager.InvalidateRequerySuggested();
         }
 
         private void OnMergeRequested(CategoryViewModel requestingCategory)
@@ -194,6 +203,80 @@ namespace KarateTournamentApp.ViewModels
             foreach (var category in CategorySelections)
             {
                 category.IsSelected = false;
+            }
+        }
+
+        private void ImportData()
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+                Title = "Importuj dane turnieju"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    var importedCategories = _jsonService.LoadTournamentData(openFileDialog.FileName);
+                    
+                    if (importedCategories != null && importedCategories.Any())
+                    {
+                        _categoryManager.DefinedCategories.Clear();
+                        _categoryManager.DefinedCategories.AddRange(importedCategories);
+                        
+                        AllParticipants.Clear();
+                        foreach (var category in importedCategories)
+                        {
+                            foreach (var participant in category.Participants)
+                            {
+                                if (!AllParticipants.Any(p => p.Id == participant.Id))
+                                {
+                                    AllParticipants.Add(participant);
+                                }
+                            }
+                        }
+                        
+                        RefreshCategories();
+                        MessageBox.Show($"Pomyślnie zaimportowano {importedCategories.Count} kategorii i {AllParticipants.Count} zawodników!",
+                            "Import zakończony", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Plik nie zawiera żadnych danych.",
+                            "Błąd", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Błąd podczas importu danych:\n{ex.Message}",
+                        "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void ExportData()
+        {
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+                Title = "Exportuj dane turnieju",
+                FileName = $"tournament_data_{DateTime.Now:yyyy-MM-dd_HH-mm}.json"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    _jsonService.SaveTournamentData(saveFileDialog.FileName, _categoryManager.DefinedCategories);
+                    MessageBox.Show($"Pomyślnie wyeksportowano {_categoryManager.DefinedCategories.Count} kategorii!",
+                        "Export zakończony", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Błąd podczas exportu danych:\n{ex.Message}",
+                        "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
     }

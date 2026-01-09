@@ -21,16 +21,146 @@
                 <x:Type TypeName="models:Sex"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
     </Window.Resources>
 
-    <Grid Margin="20">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+    <Grid>
+        <ToggleButton x:Name="MenuToggle"
+                      Width="40" 
+                      Height="60"
+                      HorizontalAlignment="Left" 
+                      VerticalAlignment="Top"
+                      Margin="5"
+                      Background="#2C3E50"
+                      Foreground="White"
+                      BorderThickness="0"
+                      Cursor="Hand"
+                      Panel.ZIndex="1000">
+            <ToggleButton.Style>
+                <Style TargetType="ToggleButton">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ToggleButton">
+                                <Border Background="{TemplateBinding Background}"
+                                        CornerRadius="5"
+                                        Padding="8">
+                                    <TextBlock Text="☰" 
+                                               FontSize="24" 
+                                               FontWeight="Bold"
+                                               Foreground="{TemplateBinding Foreground}"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#34495E"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter Property="Background" Value="#1ABC9C"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ToggleButton.Style>
+        </ToggleButton>
 
-        <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="15" BorderBrush="#DDD" BorderThickness="1">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <!-- Rozwijane menu z lewej strony -->
+        <Border x:Name="SideMenu"
+                Width="200"
+                HorizontalAlignment="Left"
+                Background="#2C3E50"
+                BorderThickness="0,0,2,0"
+                BorderBrush="#1ABC9C"
+                Panel.ZIndex="999"
+                Visibility="{Binding IsChecked, ElementName=MenuToggle, Converter={StaticResource BoolToVisConverter}}">
+            <StackPanel Margin="0,70,0,0">
+                <!-- Przycisk Import -->
+                <Button Command="{Binding ImportCommand}"
+                        Background="#27AE60"
+                        Foreground="White"
+                        FontWeight="SemiBold"
+                        Padding="15,12"
+                        Margin="10,5"
+                        BorderThickness="0"
+                        Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="📥" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="Import" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="5"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#229954"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Przycisk Export -->
+                <Button Command="{Binding ExportCommand}"
+                        Background="#E67E22"
+                        Foreground="White"
+                        FontWeight="SemiBold"
+                        Padding="15,12"
+                        Margin="10,5"
+                        BorderThickness="0"
+                        Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="💾" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="Export" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}"
+                                                CornerRadius="5"
+                                                Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#CA6F1E"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- Główna zawartość -->
+        <Grid Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="15" BorderBrush="#DDD" BorderThickness="1" Margin="32,0,1164,0" Grid.ColumnSpan="2">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="-6,0,0,0">
                 <StackPanel>
                     <TextBlock Text="Rejestracja Zawodnika" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Foreground="#333"/>
 
@@ -100,24 +230,25 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="Konkurencje" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock Grid.Row="0" Text="Konkurencje" FontSize="20" FontWeight="Bold" Margin="10,0,0,10"/>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding Categories}">
+                <ItemsControl ItemsSource="{Binding Categories}" Width="1135">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border Background="White" BorderBrush="#DDD" BorderThickness="1" 
                                     CornerRadius="5" Margin="0,0,0,10" Padding="0">
                                 <StackPanel>
-                                    <!-- Header z informacjami o kategorii -->
+                                    <!-- Category info header -->
                                     <Grid Background="#F5F5F5">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <!-- Przycisk rozwijania -->
+                                        <!-- Expand button -->
                                         <ToggleButton Grid.Column="0" 
                                                       IsChecked="{Binding IsExpanded, Mode=TwoWay}"
                                                       Width="100" Height="35" Margin="5"
@@ -150,7 +281,7 @@
                                             </ToggleButton.Style>
                                         </ToggleButton>
 
-                                        <!-- Informacje o kategorii -->
+                                        <!-- Category info -->
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="5,10">
                                             <TextBlock FontWeight="Bold" FontSize="15" Margin="0,0,0,3">
                                                 <Run Text="{Binding Name, Mode=OneWay}"/>
@@ -171,7 +302,7 @@
                                             </StackPanel>
                                         </StackPanel>
 
-                                        <!-- Przycisk łączenia kategorii -->
+                                        <!-- Merge button -->
                                         <Button Grid.Column="2" 
                                                 Command="{Binding MergeCommand}"
                                                 Content="🔗 Połącz" 
@@ -203,7 +334,42 @@
                                                 </Style>
                                             </Button.Style>
                                         </Button>
+
+                                        <!-- Delete button -->
+                                        <Button Grid.Column="3" 
+                                                Command="{Binding DeleteCommand}"
+                                                Content="🗑️ Usuń" 
+                                                Background="#E74C3C" 
+                                                Foreground="White"
+                                                FontWeight="SemiBold"
+                                                Padding="15,8"
+                                                Margin="5"
+                                                BorderThickness="0"
+                                                Cursor="Hand">
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border Background="{TemplateBinding Background}"
+                                                                        CornerRadius="5"
+                                                                        Padding="{TemplateBinding Padding}">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter Property="Background" Value="#C0392B"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
                                     </Grid>
+                                    
+                                    
 
                                     <!-- Lista zawodników (widoczna po rozwinięciu) -->
                                     <Border Visibility="{Binding IsExpanded, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -256,6 +422,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
+        </Grid>
         </Grid>
     </Grid>
 </Window>
