@@ -40,9 +40,10 @@ namespace KarateTournamentApp.Models
 
     public class ShobuSanbonMatch : Match
     {
-        double time = 3;
-        int penaltyAka = 0;
-        int penaltyShiro = 0;
+        public double TimeRemaining { get; set; } = 180; // 3 minutes in seconds
+        public int PenaltyAka { get; set; } = 0;
+        public int PenaltyShiro { get; set; } = 0;
+        public bool IsRunning { get; set; } = false;
 
         public ShobuSanbonMatch() : base()
         {

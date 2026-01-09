@@ -124,6 +124,8 @@ namespace KarateTournamentApp.Models
         }
         public void ConductCategory()
         {
+            InitializeBracket();
+
 
         }
     }

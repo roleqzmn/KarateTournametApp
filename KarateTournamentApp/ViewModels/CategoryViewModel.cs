@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using KarateTournamentApp.Models;
+using KarateTournamentApp.Views;
 
 namespace KarateTournamentApp.ViewModels
 {
@@ -14,6 +15,8 @@ namespace KarateTournamentApp.ViewModels
             _mergeRequestCallback = mergeRequestCallback;
             MergeCommand = new RelayCommand(o => RequestMerge(), o => true);
             RemoveParticipantCommand = new RelayCommand(RemoveParticipant, o => true);
+            StartCompetitionCommand = new RelayCommand(o => StartCompetition(), o => CanStartCompetition());
+            DeleteCommand = new RelayCommand(o => { }, o => false); // Placeholder for delete functionality
         }
 
         public Category Category => _category;
@@ -49,6 +52,8 @@ namespace KarateTournamentApp.ViewModels
 
         public ICommand MergeCommand { get; }
         public ICommand RemoveParticipantCommand { get; }
+        public ICommand StartCompetitionCommand { get; }
+        public ICommand DeleteCommand { get; }
 
         private void RequestMerge()
         {
@@ -65,6 +70,11 @@ namespace KarateTournamentApp.ViewModels
             }
         }
 
+        private void StartCategory()
+        {
+            _category.ConductCategory();
+        }
+
         public void Refresh()
         {
             OnPropertyChanged(nameof(Name));
@@ -73,6 +83,93 @@ namespace KarateTournamentApp.ViewModels
             OnPropertyChanged(nameof(SexDisplay));
             OnPropertyChanged(nameof(AgeRangeDisplay));
             OnPropertyChanged(nameof(Category));
+        }
+
+        private bool CanStartCompetition()
+        {
+            return _category.Participants.Count >= 2 && !_category.IsFinished;
+        }
+
+        private void StartCompetition()
+        {
+            // Check if this is a Shobu Sanbon category (bracket-style competition)
+            if (_category is ShobuSanbonCategory)
+            {
+                StartBracketCompetition();
+            }
+            else
+            {
+                // All other categories are individual (Kata, Kumite, Kihon, Kobudo, Grappling)
+                StartIndividualCompetition();
+            }
+        }
+
+        private void StartBracketCompetition()
+        {
+            var competitionManager = new CompetitionManagerViewModel(_category);
+            var scoreboardViewModel = new ScoreboardViewModel(competitionManager);
+            
+            // Create and show Scoreboard View (public display)
+            var scoreboardWindow = new System.Windows.Window
+            {
+                Title = $"Tablica wynikow - {_category.Name}",
+                Width = 1200,
+                Height = 800,
+                WindowState = System.Windows.WindowState.Maximized,
+                Content = new ScoreboardView
+                {
+                    DataContext = scoreboardViewModel
+                }
+            };
+
+            // Create and show Judge Panel
+            var judgeWindow = new System.Windows.Window
+            {
+                Title = $"Panel sedziowski - {_category.Name}",
+                Width = 800,
+                Height = 600,
+                Content = new ScoreboardJudge
+                {
+                    DataContext = new ScoreboardJudgeViewModel(competitionManager, scoreboardViewModel)
+                }
+            };
+
+            scoreboardWindow.Show();
+            judgeWindow.Show();
+        }
+
+        private void StartIndividualCompetition()
+        {
+            var competitionManager = new IndividualCompetitionManagerViewModel(_category);
+            var scoreboardViewModel = new IndividualScoreboardViewModel(competitionManager);
+            
+            // Create and show Scoreboard View (public display)
+            var scoreboardWindow = new System.Windows.Window
+            {
+                Title = $"Tablica wynikow - {_category.Name}",
+                Width = 1200,
+                Height = 800,
+                WindowState = System.Windows.WindowState.Maximized,
+                Content = new IndividualScoreboardView
+                {
+                    DataContext = scoreboardViewModel
+                }
+            };
+
+            // Create and show Judge Panel
+            var judgeWindow = new System.Windows.Window
+            {
+                Title = $"Panel sedziowski - {_category.Name}",
+                Width = 900,
+                Height = 700,
+                Content = new IndividualJudgeView
+                {
+                    DataContext = new IndividualJudgeViewModel(competitionManager)
+                }
+            };
+
+            scoreboardWindow.Show();
+            judgeWindow.Show();
         }
     }
 }

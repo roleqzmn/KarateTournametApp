@@ -1,12 +1,150 @@
 <UserControl x:Class="KarateTournamentApp.Views.ScoreboardView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:KarateTournamentApp.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Scoreboard View" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+         xmlns:local="clr-namespace:KarateTournamentApp.Views"
+         xmlns:converters="clr-namespace:KarateTournamentApp.Converters"
+         mc:Ignorable="d" 
+         d:DesignHeight="800" d:DesignWidth="1200"
+         Background="#1a1a1a">
+<UserControl.Resources>
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+</UserControl.Resources>
+<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header with category name -->
+        <Border Grid.Row="0" Background="#2C3E50" Padding="20">
+            <TextBlock Text="{Binding CategoryName}" 
+                       FontSize="36" 
+                       FontWeight="Bold" 
+                       Foreground="White"
+                       HorizontalAlignment="Center"/>
+        </Border>
+
+        <!-- Main scoreboard area -->
+        <Grid Grid.Row="1" Margin="40">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- AKA (Red Corner) -->
+            <Border Grid.Column="0" Background="#C0392B" CornerRadius="10" Padding="30">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="AKA" 
+                               FontSize="32" 
+                               FontWeight="Bold" 
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,20"/>
+                    
+                    <TextBlock Text="{Binding AkaName}" 
+                               FontSize="48" 
+                               FontWeight="Bold" 
+                               Foreground="White"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,40"/>
+                    
+                    <TextBlock Text="{Binding AkaScore}" 
+                               FontSize="120" 
+                               FontWeight="Bold" 
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,20"/>
+
+                    <!-- Penalties (for Shobu Sanbon) -->
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center"
+                                Visibility="{Binding IsShobuSanbon, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock Text="Kary: " 
+                                   FontSize="24" 
+                                   Foreground="#FFD700"/>
+                        <TextBlock Text="{Binding AkaPenalty}" 
+                                   FontSize="24" 
+                                   FontWeight="Bold"
+                                   Foreground="#FFD700"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Center - Timer (for Shobu Sanbon) -->
+            <Border Grid.Column="1" 
+                    Background="#34495E" 
+                    CornerRadius="10" 
+                    Padding="40,30"
+                    Margin="20,0"
+                    MinWidth="200"
+                    Visibility="{Binding IsShobuSanbon, Converter={StaticResource BoolToVisibilityConverter}}">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="CZAS" 
+                               FontSize="24" 
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,20"/>
+                    
+                    <TextBlock Text="{Binding TimeDisplay}" 
+                               FontSize="72" 
+                               FontWeight="Bold" 
+                               Foreground="#1ABC9C"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- SHIRO (White Corner) -->
+            <Border Grid.Column="2" Background="#2980B9" CornerRadius="10" Padding="30">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="SHIRO" 
+                               FontSize="32" 
+                               FontWeight="Bold" 
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,20"/>
+                    
+                    <TextBlock Text="{Binding ShiroName}" 
+                               FontSize="48" 
+                               FontWeight="Bold" 
+                               Foreground="White"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"
+                               Margin="0,0,0,40"/>
+                    
+                    <TextBlock Text="{Binding ShiroScore}" 
+                               FontSize="120" 
+                               FontWeight="Bold" 
+                               Foreground="White"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,20"/>
+
+                    <!-- Penalties (for Shobu Sanbon) -->
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center"
+                                Visibility="{Binding IsShobuSanbon, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock Text="Kary: " 
+                                   FontSize="24" 
+                                   Foreground="#FFD700"/>
+                        <TextBlock Text="{Binding ShiroPenalty}" 
+                                   FontSize="24" 
+                                   FontWeight="Bold"
+                                   Foreground="#FFD700"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#2C3E50" Padding="15">
+            <TextBlock Text="Karate Tournament Manager" 
+                       FontSize="20" 
+                       Foreground="#95a5a6"
+                       HorizontalAlignment="Center"/>
+        </Border>
     </Grid>
 </UserControl>

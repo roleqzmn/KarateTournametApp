@@ -1,12 +1,254 @@
 <UserControl x:Class="KarateTournamentApp.Views.ScoreboardJudge"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:KarateTournamentApp.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Scoreboard Judge Panel" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"/>
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+         xmlns:local="clr-namespace:KarateTournamentApp.Views"
+         xmlns:converters="clr-namespace:KarateTournamentApp.Converters"
+         mc:Ignorable="d" 
+         d:DesignHeight="600" d:DesignWidth="800"
+         Background="#F0F0F0">
+<UserControl.Resources>
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+</UserControl.Resources>
+<Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#2C3E50" CornerRadius="5" Padding="15" Margin="0,0,0,20">
+            <StackPanel>
+                <TextBlock Text="Panel Sedziowski" 
+                           FontSize="24" 
+                           FontWeight="Bold" 
+                           Foreground="White"
+                           HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding CategoryName}" 
+                           FontSize="18" 
+                           Foreground="#95a5a6"
+                           HorizontalAlignment="Center"
+                           Margin="0,5,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Control Panel -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Shobu Sanbon Controls -->
+                <Border Background="White" 
+                        CornerRadius="5" 
+                        Padding="20" 
+                        Margin="0,0,0,15"
+                        Visibility="{Binding IsShobuSanbon, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="Kontrola Shobu Sanbon" 
+                                   FontSize="20" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,20"/>
+
+                        <!-- Timer Controls -->
+                        <GroupBox Header="Zarzadzanie Czasem" Padding="10" Margin="0,0,0,15">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="? Start" 
+                                        Command="{Binding StartTimerCommand}"
+                                        Background="#27AE60" 
+                                        Foreground="White"
+                                        FontSize="16"
+                                        FontWeight="Bold"
+                                        Padding="20,10"
+                                        Margin="5"
+                                        Cursor="Hand"/>
+                                
+                                <Button Content="? Stop" 
+                                        Command="{Binding StopTimerCommand}"
+                                        Background="#E67E22" 
+                                        Foreground="White"
+                                        FontSize="16"
+                                        FontWeight="Bold"
+                                        Padding="20,10"
+                                        Margin="5"
+                                        Cursor="Hand"/>
+                                
+                                <Button Content="? Reset" 
+                                        Command="{Binding ResetTimerCommand}"
+                                        Background="#3498DB" 
+                                        Foreground="White"
+                                        FontSize="16"
+                                        FontWeight="Bold"
+                                        Padding="20,10"
+                                        Margin="5"
+                                        Cursor="Hand"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- AKA Controls -->
+                            <GroupBox Grid.Column="0" Header="AKA (Czerwony)" Margin="0,0,10,0" Padding="10">
+                                <StackPanel>
+                                    <TextBlock Text="Punkty" FontWeight="Bold" Margin="0,0,0,10"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="?" 
+                                                Command="{Binding RemoveAkaPointCommand}"
+                                                Background="#E74C3C"
+                                                Foreground="White"
+                                                FontSize="24"
+                                                FontWeight="Bold"
+                                                Width="60"
+                                                Height="60"
+                                                Margin="5"
+                                                Cursor="Hand"/>
+                                        
+                                        <Button Content="+" 
+                                                Command="{Binding AddAkaPointCommand}"
+                                                Background="#27AE60"
+                                                Foreground="White"
+                                                FontSize="24"
+                                                FontWeight="Bold"
+                                                Width="60"
+                                                Height="60"
+                                                Margin="5"
+                                                Cursor="Hand"/>
+                                    </StackPanel>
+
+                                    <TextBlock Text="Kary" FontWeight="Bold" Margin="0,20,0,10"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="?" 
+                                                Command="{Binding RemoveAkaPenaltyCommand}"
+                                                Background="#E74C3C"
+                                                Foreground="White"
+                                                FontSize="24"
+                                                FontWeight="Bold"
+                                                Width="60"
+                                                Height="60"
+                                                Margin="5"
+                                                Cursor="Hand"/>
+                                        
+                                        <Button Content="+" 
+                                                Command="{Binding AddAkaPenaltyCommand}"
+                                                Background="#F39C12"
+                                                Foreground="White"
+                                                FontSize="24"
+                                                FontWeight="Bold"
+                                                Width="60"
+                                                Height="60"
+                                                Margin="5"
+                                                Cursor="Hand"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+
+                            <!-- SHIRO Controls -->
+                            <GroupBox Grid.Column="1" Header="SHIRO (Bialy)" Margin="10,0,0,0" Padding="10">
+                                <StackPanel>
+                                    <TextBlock Text="Punkty" FontWeight="Bold" Margin="0,0,0,10"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="?" 
+                                                Command="{Binding RemoveShiroPointCommand}"
+                                                Background="#E74C3C"
+                                                Foreground="White"
+                                                FontSize="24"
+                                                FontWeight="Bold"
+                                                Width="60"
+                                                Height="60"
+                                                Margin="5"
+                                                Cursor="Hand"/>
+                                        
+                                        <Button Content="+" 
+                                                Command="{Binding AddShiroPointCommand}"
+                                                Background="#27AE60"
+                                                Foreground="White"
+                                                FontSize="24"
+                                                FontWeight="Bold"
+                                                Width="60"
+                                                Height="60"
+                                                Margin="5"
+                                                Cursor="Hand"/>
+                                    </StackPanel>
+
+                                    <TextBlock Text="Kary" FontWeight="Bold" Margin="0,20,0,10"/>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="?" 
+                                                Command="{Binding RemoveShiroPenaltyCommand}"
+                                                Background="#E74C3C"
+                                                Foreground="White"
+                                                FontSize="24"
+                                                FontWeight="Bold"
+                                                Width="60"
+                                                Height="60"
+                                                Margin="5"
+                                                Cursor="Hand"/>
+                                        
+                                        <Button Content="+" 
+                                                Command="{Binding AddShiroPenaltyCommand}"
+                                                Background="#F39C12"
+                                                Foreground="White"
+                                                FontSize="24"
+                                                FontWeight="Bold"
+                                                Width="60"
+                                                Height="60"
+                                                Margin="5"
+                                                Cursor="Hand"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Other Categories (Kata/Kumite) Controls -->
+                <Border Background="White" 
+                        CornerRadius="5" 
+                        Padding="20" 
+                        Margin="0,0,0,15"
+                        Visibility="{Binding IsShobuSanbon, Converter={StaticResource InverseBoolToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock Text="Panel Oceny Sedziow" 
+                                   FontSize="20" 
+                                   FontWeight="Bold"
+                                   Margin="0,0,0,20"/>
+                        
+                        <TextBlock Text="Funkcjonalnosc oceny przez sedziow zostanie dodana wkrotce..."
+                                   FontStyle="Italic"
+                                   Foreground="#7f8c8d"
+                                   TextAlignment="Center"
+                                   Margin="0,40"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Match Control Buttons -->
+        <Border Grid.Row="2" Background="White" CornerRadius="5" Padding="15" Margin="0,15,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Zakoncz walke" 
+                        Command="{Binding FinishMatchCommand}"
+                        Background="#9B59B6" 
+                        Foreground="White"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Padding="30,15"
+                        Margin="10"
+                        Cursor="Hand"/>
+                
+                <Button Content="Nastepna walka" 
+                        Command="{Binding NextMatchCommand}"
+                        Background="#1ABC9C" 
+                        Foreground="White"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Padding="30,15"
+                        Margin="10"
+                        Cursor="Hand"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>
