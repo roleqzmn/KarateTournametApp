@@ -70,11 +70,6 @@ namespace KarateTournamentApp.ViewModels
             }
         }
 
-        private void StartCategory()
-        {
-            _category.ConductCategory();
-        }
-
         public void Refresh()
         {
             OnPropertyChanged(nameof(Name));
@@ -92,14 +87,14 @@ namespace KarateTournamentApp.ViewModels
 
         private void StartCompetition()
         {
-            // Check if this is a Shobu Sanbon category (bracket-style competition)
+            // Check if this is a Kumite category (bracket-style competition)
             if (_category is ShobuSanbonCategory)
             {
                 StartBracketCompetition();
             }
             else
             {
-                // All other categories are individual (Kata, Kumite, Kihon, Kobudo, Grappling)
+                // All other categories are individual (Kata, Kihon, Kobudo, Grappling)
                 StartIndividualCompetition();
             }
         }
@@ -142,6 +137,7 @@ namespace KarateTournamentApp.ViewModels
         {
             var competitionManager = new IndividualCompetitionManagerViewModel(_category);
             var scoreboardViewModel = new IndividualScoreboardViewModel(competitionManager);
+            _category.Participants.OrderBy(p=>p.Id);
             
             // Create and show Scoreboard View (public display)
             var scoreboardWindow = new System.Windows.Window

@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices.JavaScript;
 using System.Security.Policy;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace KarateTournamentApp.Models
@@ -54,6 +55,12 @@ namespace KarateTournamentApp.Models
         {
         }
 
+        private void GenerateName()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"{MinAge}-{MaxAge}, {AllowedBelts}");
+            Name = sb.ToString();
+        }
         /// <summary>
         /// Combines the passed category with the current one.
         /// </summary>
@@ -78,7 +85,14 @@ namespace KarateTournamentApp.Models
                     AllowedBelts.Add(belt);
                 }
             }
-            this.Name = $"{this.Name} + {otherCategory.Name}";
+            if (MinAge > 17)
+            {
+                Name = "Senior";
+            }
+            else
+            {
+                GenerateName();
+            }
         }
 
         public void PromoteWinner(int currentMatchIndex)
@@ -121,12 +135,6 @@ namespace KarateTournamentApp.Models
                     PromoteWinner(bracketIndex);
                 }
             }
-        }
-        public void ConductCategory()
-        {
-            InitializeBracket();
-
-
         }
     }
 
@@ -171,10 +179,6 @@ namespace KarateTournamentApp.Models
                     PromoteWinner(bracketIndex);
                 }
             }
-        }
-        public void ConductCategory()
-        {
-
         }
     }
 }
