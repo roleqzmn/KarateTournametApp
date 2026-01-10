@@ -76,6 +76,10 @@ namespace KarateTournamentApp.ViewModels
         public ICommand AddParticipantCommand { get; }
         public ICommand ImportCommand { get; }
         public ICommand ExportCommand { get; }
+        public ICommand ImportXmlCommand { get; }
+        public ICommand CreateXmlTemplateCommand { get; }
+        public ICommand ImportExcelCommand { get; }
+        public ICommand CreateExcelTemplateCommand { get; }
 
         private readonly ImportService _importService;
 
@@ -103,6 +107,10 @@ namespace KarateTournamentApp.ViewModels
             AddParticipantCommand = new RelayCommand(o => CreateParticipant(), o => CanCreateParticipant());
             ImportCommand = new RelayCommand(o => ImportData());
             ExportCommand = new RelayCommand(o => ExportData(), o => _categoryManager.DefinedCategories.Any());
+            ImportXmlCommand = new RelayCommand(o => ImportXmlData(), o => DivideByAge || DivideByBelt);
+            CreateXmlTemplateCommand = new RelayCommand(o => CreateXmlTemplate());
+            ImportExcelCommand = new RelayCommand(o => ImportExcelData(), o => DivideByAge || DivideByBelt);
+            CreateExcelTemplateCommand = new RelayCommand(o => CreateExcelTemplate());
         }
 
         private bool CanCreateParticipant()
@@ -212,6 +220,29 @@ namespace KarateTournamentApp.ViewModels
             _importService.ImportData(_categoryManager, AllParticipants);
             RefreshCategories();
         }
+
+        private void ImportXmlData()
+        {
+            _importService.ImportParticipantsFromXml(_categoryManager, AllParticipants, DivideByBelt, DivideByAge);
+            RefreshCategories();
+        }
+
+        private void CreateXmlTemplate()
+        {
+            _importService.CreateSampleXmlFile();
+        }
+
+        private void ImportExcelData()
+        {
+            _importService.ImportParticipantsFromExcel(_categoryManager, AllParticipants, DivideByBelt, DivideByAge);
+            RefreshCategories();
+        }
+
+        private void CreateExcelTemplate()
+        {
+            _importService.CreateSampleExcelFile();
+        }
+
         private void ExportData()
         {
             _exportService.ExportData(_categoryManager);
