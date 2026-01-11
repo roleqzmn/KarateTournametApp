@@ -162,9 +162,103 @@ namespace KarateTournamentApp.ViewModels
             }
         }
 
+        private ParticipantResult ResolveDraw(ParticipantResult participant1, ParticipantResult participant2)
+        {
+            // Open 1v1 draw resolver window
+            var drawResolver = new DrawResolverViewModel(participant1.Participant, participant2.Participant);
+            var drawWindow = new System.Windows.Window
+            {
+                Title = "Rozstrzyganie Remisu",
+                Width = 800,
+                Height = 600,
+                WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen,
+                ResizeMode = System.Windows.ResizeMode.NoResize,
+                Content = new Views.DrawResolverView
+                {
+                    DataContext = drawResolver
+                }
+            };
+
+            Participant winner = null;
+            drawResolver.WinnerConfirmed += (sender, selectedWinner) =>
+            {
+                winner = selectedWinner;
+                drawWindow.Close();
+            };
+
+            drawWindow.ShowDialog();
+
+            // Return the winner's result
+            return winner == participant1.Participant ? participant1 : participant2;
+        }
+
         public ObservableCollection<ParticipantResult> GetFinalRankings()
         {
-            return new ObservableCollection<ParticipantResult>(Results.OrderByDescending(r => r.Score));
+            var results = new ObservableCollection<ParticipantResult>(Results.OrderByDescending(r => r.Score));
+            
+            if (results.Count < 2) return results;
+
+            // Resolve draw between 1st and 2nd place
+            if (results[0].Score == results[1].Score)
+            {
+                var sortedScores1 = results[0].JudgeScores.OrderBy(s => s).ToList();
+                var sortedScores2 = results[1].JudgeScores.OrderBy(s => s).ToList();
+                
+                // Compare highest score (after removing lowest and highest)
+                if (sortedScores1[sortedScores1.Count - 1] < sortedScores2[sortedScores2.Count - 1])
+                {
+                    SwapResults(results, 0, 1);
+                }
+                // Compare lowest score  
+                else if (sortedScores1[0] < sortedScores2[0])
+                {
+                    SwapResults(results, 0, 1);
+                }
+                // If still tied, resolve with 1v1 match
+                else
+                {
+                    var winner = ResolveDraw(results[0], results[1]);
+                    if (winner == results[1])
+                    {
+                        SwapResults(results, 0, 1);
+                    }
+                }
+            }
+
+            if (results.Count < 3) return results;
+
+            // Resolve draw between 2nd and 3rd place
+            if (results[1].Score == results[2].Score)
+            {
+                var sortedScores1 = results[1].JudgeScores.OrderBy(s => s).ToList();
+                var sortedScores2 = results[2].JudgeScores.OrderBy(s => s).ToList();
+                
+                if (sortedScores1[sortedScores1.Count - 1] < sortedScores2[sortedScores2.Count - 1])
+                {
+                    SwapResults(results, 1, 2);
+                }
+                else if (sortedScores1[0] < sortedScores2[0])
+                {
+                    SwapResults(results, 1, 2);
+                }
+                else
+                {
+                    var winner = ResolveDraw(results[1], results[2]);
+                    if (winner == results[2])
+                    {
+                        SwapResults(results, 1, 2);
+                    }
+                }
+            }
+            
+            return results;
+        }
+
+        private void SwapResults(ObservableCollection<ParticipantResult> results, int index1, int index2)
+        {
+            var temp = results[index1];
+            results[index1] = results[index2];
+            results[index2] = temp;
         }
     }
 

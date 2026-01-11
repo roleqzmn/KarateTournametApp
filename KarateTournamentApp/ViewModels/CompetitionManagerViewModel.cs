@@ -32,11 +32,11 @@ namespace KarateTournamentApp.ViewModels
 
         public bool IsShobuSanbon => CurrentMatch is ShobuSanbonMatch;
 
-        public Participant AkaParticipant => CurrentMatch?.Aka.HasValue == true 
+        public Participant? AkaParticipant => CurrentMatch?.Aka.HasValue == true 
             ? _category.Participants.FirstOrDefault(p => p.Id == CurrentMatch.Aka.Value)
             : null;
 
-        public Participant ShiroParticipant => CurrentMatch?.Shiro.HasValue == true
+        public Participant? ShiroParticipant => CurrentMatch?.Shiro.HasValue == true
             ? _category.Participants.FirstOrDefault(p => p.Id == CurrentMatch.Shiro.Value)
             : null;
 
@@ -47,7 +47,7 @@ namespace KarateTournamentApp.ViewModels
         {
             _category = category;
             
-            // Initialize bracket if not already done~~
+            // Initialize bracket if not already done
             if (!_category.BracketMatches.Any())
             {
                 _category.InitializeBracket();
