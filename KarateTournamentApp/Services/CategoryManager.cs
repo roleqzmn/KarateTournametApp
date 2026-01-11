@@ -29,7 +29,7 @@ namespace KarateTournamentApp.Services
                     (p.Sex == c.Sex || c.Sex == Sex.Unisex) &&
                     categoryType == c.CategoryType);
 
-                    if (targetCategory != null)
+                    if (targetCategory != null) 
                     {
                         targetCategory.Participants.Add(p);
                     }
@@ -146,9 +146,10 @@ namespace KarateTournamentApp.Services
                         cat.Participants.Add(p);
                         DefinedCategories.Add(cat);
                     }
-                    
                 }
             }
         }
+        
+            
     }
 }

@@ -151,9 +151,30 @@ namespace KarateTournamentApp.ViewModels
             Categories.Clear();
             foreach (var category in _categoryManager.DefinedCategories)
             {
-                Categories.Add(new CategoryViewModel(category, OnMergeRequested));
+                Categories.Add(new CategoryViewModel(category, OnMergeRequested, OnDeleteRequested));
             }
             CommandManager.InvalidateRequerySuggested();
+        }
+
+        private void OnDeleteRequested(CategoryViewModel categoryToDelete)
+        {
+            var result = MessageBox.Show(
+                $"Czy na pewno chcesz usunąć tę kategorię?\n\n" +
+                $"Nazwa: '{categoryToDelete.Name}'\n" +
+                $"Zawodnicy: {categoryToDelete.ParticipantCount}\n\n" +
+                $"Uwaga: Ta operacja jest nieodwracalna!\n" +
+                $"Zawodnicy pozostaną w systemie, ale zostaną usunięci z tej kategorii.",
+                "Potwierdź usunięcie kategorii", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                _categoryManager.DefinedCategories.Remove(categoryToDelete.Category);
+                
+                RefreshCategories();
+                
+                MessageBox.Show($"Kategoria '{categoryToDelete.Name}' została pomyślnie usunięta!",
+                    "Sukces", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void OnMergeRequested(CategoryViewModel requestingCategory)

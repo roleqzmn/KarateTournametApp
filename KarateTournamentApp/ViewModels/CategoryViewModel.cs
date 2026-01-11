@@ -8,15 +8,17 @@ namespace KarateTournamentApp.ViewModels
     {
         private readonly Category _category;
         private readonly Action<CategoryViewModel> _mergeRequestCallback;
+        private readonly Action<CategoryViewModel> _deleteRequestCallback;
 
-        public CategoryViewModel(Category category, Action<CategoryViewModel> mergeRequestCallback)
+        public CategoryViewModel(Category category, Action<CategoryViewModel> mergeRequestCallback, Action<CategoryViewModel> deleteRequestCallback)
         {
             _category = category;
             _mergeRequestCallback = mergeRequestCallback;
+            _deleteRequestCallback = deleteRequestCallback;
             MergeCommand = new RelayCommand(o => RequestMerge(), o => true);
             RemoveParticipantCommand = new RelayCommand(RemoveParticipant, o => true);
             StartCompetitionCommand = new RelayCommand(o => StartCompetition(), o => CanStartCompetition());
-            DeleteCommand = new RelayCommand(o => { }, o => false); // Placeholder for delete functionality
+            DeleteCommand = new RelayCommand(o => RequestDelete(), o => CanDelete());
         }
 
         public Category Category => _category;
@@ -68,6 +70,17 @@ namespace KarateTournamentApp.ViewModels
                 OnPropertyChanged(nameof(ParticipantCount));
                 Refresh();
             }
+        }
+
+        private bool CanDelete()
+        {
+            // Can delete if category hasn't started or is empty
+            return !_category.IsFinished;
+        }
+
+        private void RequestDelete()
+        {
+            _deleteRequestCallback?.Invoke(this);
         }
 
         public void Refresh()
@@ -168,4 +181,6 @@ namespace KarateTournamentApp.ViewModels
             judgeWindow.Show();
         }
     }
+
+
 }
