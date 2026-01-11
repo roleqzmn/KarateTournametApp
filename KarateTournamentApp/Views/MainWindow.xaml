@@ -415,6 +415,7 @@ Title="Karate Tournament Manager" Height="917" Width="1524" Background="#F0F0F0"
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Expand button -->

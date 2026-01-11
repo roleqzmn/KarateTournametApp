@@ -19,6 +19,7 @@ namespace KarateTournamentApp.ViewModels
             RemoveParticipantCommand = new RelayCommand(RemoveParticipant, o => true);
             StartCompetitionCommand = new RelayCommand(o => StartCompetition(), o => CanStartCompetition());
             DeleteCommand = new RelayCommand(o => RequestDelete(), o => CanDelete());
+            InitializeBracketCommand = new RelayCommand(o => InitializeBracket(), o => CanInitializeBracket());
         }
 
         public Category Category => _category;
@@ -56,6 +57,7 @@ namespace KarateTournamentApp.ViewModels
         public ICommand RemoveParticipantCommand { get; }
         public ICommand StartCompetitionCommand { get; }
         public ICommand DeleteCommand { get; }
+        public ICommand InitializeBracketCommand { get; }
 
         private void RequestMerge()
         {
@@ -81,6 +83,47 @@ namespace KarateTournamentApp.ViewModels
         private void RequestDelete()
         {
             _deleteRequestCallback?.Invoke(this);
+        }
+
+        private bool CanInitializeBracket()
+        {
+            // Can initialize bracket if:
+            // 1. Category has at least 2 participants
+            // 2. Category is a bracket-style category (ShobuSanbonCategory or has bracket matches)
+            // 3. Bracket hasn't been initialized yet (no matches)
+            // 4. Category hasn't finished
+            return _category.Participants.Count >= 2 && 
+                   _category.BracketMatches.Count == 0 && 
+                   !_category.IsFinished;
+        }
+
+        private void InitializeBracket()
+        {
+            try
+            {
+                if(_category.CategoryType==CategoryType.Kumite)
+                    _category.InitializeBracket();
+                else
+                    _category.Participants.OrderBy(p => p.Id);
+                System.Windows.MessageBox.Show(
+                    $"Drabinka zosta³a zainicjalizowana!\n\n" +
+                    $"Kategoria: {_category.Name}\n" +
+                    $"Liczba zawodników: {_category.Participants.Count}\n" +
+                    $"Liczba meczy: {_category.BracketMatches.Count}",
+                    "Sukces", 
+                    System.Windows.MessageBoxButton.OK, 
+                    System.Windows.MessageBoxImage.Information);
+                
+                Refresh();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(
+                    $"B³¹d podczas inicjalizacji drabinki:\n{ex.Message}",
+                    "B³¹d",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Error);
+            }
         }
 
         public void Refresh()
@@ -150,7 +193,7 @@ namespace KarateTournamentApp.ViewModels
         {
             var competitionManager = new IndividualCompetitionManagerViewModel(_category);
             var scoreboardViewModel = new IndividualScoreboardViewModel(competitionManager);
-            _category.Participants.OrderBy(p=>p.Id);
+
             
             // Create and show Scoreboard View (public display)
             var scoreboardWindow = new System.Windows.Window
