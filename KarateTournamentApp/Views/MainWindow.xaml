@@ -416,6 +416,7 @@ Title="Karate Tournament Manager" Height="917" Width="1524" Background="#F0F0F0"
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Expand button -->
@@ -505,8 +506,44 @@ Title="Karate Tournament Manager" Height="917" Width="1524" Background="#F0F0F0"
                                                 </Button.Style>
                                             </Button>
 
-                                            <!-- Start Competition button -->
+                                            <!-- Initialize Bracket button -->
                                             <Button Grid.Column="3" 
+                                                Command="{Binding InitializeBracketCommand}"
+                                                Content="🎲 Losuj" 
+                                                Background="#F39C12" 
+                                                Foreground="White"
+                                                FontWeight="SemiBold"
+                                                Padding="15,8"
+                                                Margin="5"
+                                                BorderThickness="0"
+                                                Cursor="Hand">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border Background="{TemplateBinding Background}"
+                                                                        CornerRadius="5"
+                                                                        Padding="{TemplateBinding Padding}">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter Property="Background" Value="#E67E22"/>
+                                                            </Trigger>
+                                                            <Trigger Property="IsEnabled" Value="False">
+                                                                <Setter Property="Opacity" Value="0.5"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
+
+                                            <!-- Start Competition button -->
+                                            <Button Grid.Column="4" 
                                                 Command="{Binding StartCompetitionCommand}"
                                                 Content="▶️ Start" 
                                                 Background="#9B59B6" 
@@ -542,7 +579,7 @@ Title="Karate Tournament Manager" Height="917" Width="1524" Background="#F0F0F0"
                                             </Button>
 
                                             <!-- Delete button -->
-                                            <Button Grid.Column="4" 
+                                            <Button Grid.Column="5" 
                                                 Command="{Binding DeleteCommand}"
                                                 Content="🗑️ Usuń" 
                                                 Background="#E74C3C" 
