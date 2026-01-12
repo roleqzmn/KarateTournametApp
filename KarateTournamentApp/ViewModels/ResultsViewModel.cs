@@ -13,9 +13,8 @@ namespace KarateTournamentApp.ViewModels
         public ResultsViewModel(IndividualCompetitionManagerViewModel competitionManager)
         {
             _competitionManager = competitionManager;
-            Rankings = new ObservableCollection<ParticipantResult>(
-                _competitionManager.Results.OrderByDescending(r => r.Score)
-            );
+            
+            Rankings = _competitionManager.GetFinalRankings();
         }
     }
 }

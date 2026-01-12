@@ -1,0 +1,182 @@
+<UserControl x:Class="KarateTournamentApp.Views.DrawResolverScoreboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:KarateTournamentApp.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="1080" d:DesignWidth="1920"
+             Background="#1C1C1E">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
+    
+    <Grid>
+        <!-- Main Content -->
+        <Grid x:Name="MainContent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title -->
+            <Border Grid.Row="0" Background="#2C2C2E" Padding="40">
+                <TextBlock Text="DOGRYWKA - POJEDYNEK 1v1" 
+                           FontSize="72" 
+                           FontWeight="Bold" 
+                           Foreground="White" 
+                           HorizontalAlignment="Center"/>
+            </Border>
+
+            <!-- Participants Display -->
+            <Grid Grid.Row="1" Margin="80">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- AKA (Red) Side -->
+                <Border Grid.Column="0" 
+                        Background="#E74C3C" 
+                        CornerRadius="30"
+                        Padding="60"
+                        BorderThickness="8"
+                        BorderBrush="#C0392B"
+                        VerticalAlignment="Center">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="AKA" 
+                                   FontSize="120" 
+                                   FontWeight="Bold" 
+                                   Foreground="White" 
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,40"/>
+                        <TextBlock Text="{Binding AkaName}" 
+                                   FontSize="80" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="White" 
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   LineHeight="100"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- VS in the middle -->
+                <Viewbox Grid.Column="1" 
+                         VerticalAlignment="Center"
+                         HorizontalAlignment="Center">
+                    <TextBlock Text="VS" 
+                               FontSize="120" 
+                               FontWeight="Black" 
+                               Foreground="#F39C12"/>
+                </Viewbox>
+
+                <!-- SHIRO (White) Side -->
+                <Border Grid.Column="2" 
+                        Background="White" 
+                        CornerRadius="30"
+                        Padding="60"
+                        BorderThickness="8"
+                        BorderBrush="#95A5A6"
+                        VerticalAlignment="Center">
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="SHIRO" 
+                                   FontSize="120" 
+                                   FontWeight="Bold" 
+                                   Foreground="#2C3E50" 
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,40"/>
+                        <TextBlock Text="{Binding ShiroName}" 
+                                   FontSize="80" 
+                                   FontWeight="SemiBold" 
+                                   Foreground="#2C3E50" 
+                                   TextWrapping="Wrap"
+                                   TextAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   LineHeight="100"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Winner Overlay (covers everything when winner is announced) -->
+        <Border x:Name="WinnerOverlay"
+                Visibility="{Binding IsWinnerAnnounced, Converter={StaticResource BoolToVisibilityConverter}}"
+                Panel.ZIndex="1000">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Background" Value="{Binding WinnerColor}"/>
+                    <Setter Property="Opacity" Value="0"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsWinnerAnnounced}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                                       From="0" To="1" Duration="0:0:0.8"
+                                                       AccelerationRatio="0.3" DecelerationRatio="0.7"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            
+            <Viewbox Margin="100">
+                <TextBlock Text="{Binding WinnerText}" 
+                           FontSize="200" 
+                           FontWeight="Black" 
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.5" ScaleY="0.5"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding WinnerColor}" Value="White">
+                                    <Setter Property="Foreground" Value="#2C3E50"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsWinnerAnnounced}" Value="True">
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleX)"
+                                                               From="0.5" To="1.0" Duration="0:0:0.8"
+                                                               AccelerationRatio="0.1" DecelerationRatio="0.9">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <BounceEase Bounces="2" EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                                <DoubleAnimation Storyboard.TargetProperty="(RenderTransform).(ScaleTransform.ScaleY)"
+                                                               From="0.5" To="1.0" Duration="0:0:0.8"
+                                                               AccelerationRatio="0.1" DecelerationRatio="0.9">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <BounceEase Bounces="2" EasingMode="EaseOut"/>
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </DataTrigger.EnterActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                    <TextBlock.Effect>
+                        <DropShadowEffect BlurRadius="30" 
+                                        ShadowDepth="8" 
+                                        Opacity="0.8"
+                                        Color="Black"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+            </Viewbox>
+        </Border>
+    </Grid>
+</UserControl>

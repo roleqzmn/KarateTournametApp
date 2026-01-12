@@ -11,6 +11,7 @@ namespace KarateTournamentApp.ViewModels
     {
         private readonly Participant _akaParticipant;
         private readonly Participant _shiroParticipant;
+        private readonly DrawResolverScoreboardViewModel _scoreboardViewModel;
         
         public string AkaName => _akaParticipant.FullName;
         public string ShiroName => _shiroParticipant.FullName;
@@ -41,10 +42,11 @@ namespace KarateTournamentApp.ViewModels
 
         public event EventHandler<Participant> WinnerConfirmed;
 
-        public DrawResolverViewModel(Participant akaParticipant, Participant shiroParticipant)
+        public DrawResolverViewModel(Participant akaParticipant, Participant shiroParticipant, DrawResolverScoreboardViewModel scoreboardViewModel = null)
         {
             _akaParticipant = akaParticipant ?? throw new ArgumentNullException(nameof(akaParticipant));
             _shiroParticipant = shiroParticipant ?? throw new ArgumentNullException(nameof(shiroParticipant));
+            _scoreboardViewModel = scoreboardViewModel;
 
             SelectAkaCommand = new RelayCommand(o => SelectWinner(_akaParticipant), o => Winner == null);
             SelectShiroCommand = new RelayCommand(o => SelectWinner(_shiroParticipant), o => Winner == null);
@@ -54,6 +56,9 @@ namespace KarateTournamentApp.ViewModels
         private void SelectWinner(Participant participant)
         {
             Winner = participant;
+            
+            // Update scoreboard if available
+            _scoreboardViewModel?.AnnounceWinner(participant);
         }
 
         private void ConfirmWinner()
@@ -65,3 +70,4 @@ namespace KarateTournamentApp.ViewModels
         }
     }
 }
+
