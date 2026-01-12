@@ -1,4 +1,4 @@
-﻿using KarateTournamentApp.Models;
+using KarateTournamentApp.Models;
 using KarateTournamentApp.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace KarateTournamentApp.Services
             _excelImportService = new ExcelImportService();
         }
 
-        public void ImportParticipantsFromXml(CategoryManager categoryManager, ObservableCollection<Participant> allParticipants, bool divideByBelt, bool divideByAge)
+        public async Task ImportParticipantsFromXmlAsync(CategoryManager categoryManager, ObservableCollection<Participant> allParticipants, bool divideByBelt, bool divideByAge)
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
@@ -35,14 +35,13 @@ namespace KarateTournamentApp.Services
             {
                 try
                 {
-                    var importedParticipants = _xmlImportService.ImportParticipantsFromXml(openFileDialog.FileName);
+                    var importedParticipants = await _xmlImportService.ImportParticipantsFromXmlAsync(openFileDialog.FileName);
 
                     if (importedParticipants != null && importedParticipants.Any())
                     {
                         int addedCount = 0;
                         foreach (var participant in importedParticipants)
                         {
-                            // Check if participant already exists (by first and last name)
                             if (!allParticipants.Any(p => p.FirstName == participant.FirstName && p.LastName == participant.LastName))
                             {
                                 categoryManager.AssignParticipant(participant, divideByBelt, divideByAge);
@@ -69,7 +68,7 @@ namespace KarateTournamentApp.Services
             }
         }
 
-        public void ImportParticipantsFromExcel(CategoryManager categoryManager, ObservableCollection<Participant> allParticipants, bool divideByBelt, bool divideByAge)
+        public async Task ImportParticipantsFromExcelAsync(CategoryManager categoryManager, ObservableCollection<Participant> allParticipants, bool divideByBelt, bool divideByAge)
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
@@ -81,14 +80,13 @@ namespace KarateTournamentApp.Services
             {
                 try
                 {
-                    var importedParticipants = _excelImportService.ImportParticipantsFromExcel(openFileDialog.FileName);
+                    var importedParticipants = await _excelImportService.ImportParticipantsFromExcelAsync(openFileDialog.FileName);
 
                     if (importedParticipants != null && importedParticipants.Any())
                     {
                         int addedCount = 0;
                         foreach (var participant in importedParticipants)
                         {
-                            // Check if participant already exists (by first and last name)
                             if (!allParticipants.Any(p => p.FirstName == participant.FirstName && p.LastName == participant.LastName))
                             {
                                 categoryManager.AssignParticipant(participant, divideByBelt, divideByAge);
@@ -115,7 +113,7 @@ namespace KarateTournamentApp.Services
             }
         }
 
-        public void CreateSampleXmlFile()
+        public async Task CreateSampleXmlFileAsync()
         {
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog
             {
@@ -128,7 +126,7 @@ namespace KarateTournamentApp.Services
             {
                 try
                 {
-                    _xmlImportService.CreateSampleXmlFile(saveFileDialog.FileName);
+                    await _xmlImportService.CreateSampleXmlFileAsync(saveFileDialog.FileName);
                     MessageBox.Show($"XML template has been saved!\n\nPath: {saveFileDialog.FileName}",
                         "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -140,7 +138,7 @@ namespace KarateTournamentApp.Services
             }
         }
 
-        public void CreateSampleExcelFile()
+        public async Task CreateSampleExcelFileAsync()
         {
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog
             {
@@ -153,7 +151,7 @@ namespace KarateTournamentApp.Services
             {
                 try
                 {
-                    _excelImportService.CreateSampleExcelFile(saveFileDialog.FileName);
+                    await _excelImportService.CreateSampleExcelFileAsync(saveFileDialog.FileName);
                     MessageBox.Show($"Excel template has been saved!\n\nPath: {saveFileDialog.FileName}",
                         "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -165,7 +163,7 @@ namespace KarateTournamentApp.Services
             }
         }
 
-        public void ImportData(CategoryManager _categoryManager, ObservableCollection<Participant> AllParticipants)
+        public async Task ImportDataAsync(CategoryManager categoryManager, ObservableCollection<Participant> allParticipants)
         {
             var openFileDialog = new Microsoft.Win32.OpenFileDialog
             {
@@ -177,27 +175,26 @@ namespace KarateTournamentApp.Services
             {
                 try
                 {
-                    var importedCategories = _jsonService.LoadTournamentData(openFileDialog.FileName);
+                    var importedCategories = await _jsonService.LoadTournamentDataAsync(openFileDialog.FileName);
 
                     if (importedCategories != null && importedCategories.Any())
                     {
-                        _categoryManager.DefinedCategories.Clear();
-                        _categoryManager.DefinedCategories.AddRange(importedCategories);
+                        categoryManager.DefinedCategories.Clear();
+                        categoryManager.DefinedCategories.AddRange(importedCategories);
 
-                        AllParticipants.Clear();
+                        allParticipants.Clear();
                         foreach (var category in importedCategories)
                         {
                             foreach (var participant in category.Participants)
                             {
-                                if (!AllParticipants.Any(p => p.Id == participant.Id))
+                                if (!allParticipants.Any(p => p.Id == participant.Id))
                                 {
-                                    AllParticipants.Add(participant);
+                                    allParticipants.Add(participant);
                                 }
                             }
                         }
 
-
-                        MessageBox.Show($"Successfully imported {importedCategories.Count} categories and {AllParticipants.Count} participants!",
+                        MessageBox.Show($"Successfully imported {importedCategories.Count} categories and {allParticipants.Count} participants!",
                             "Import Completed", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else

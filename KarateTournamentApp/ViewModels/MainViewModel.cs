@@ -85,6 +85,17 @@ namespace KarateTournamentApp.ViewModels
 
         private readonly ExportService _exportService;
 
+        private bool _isLoading;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set
+            {
+                _isLoading = value;
+                OnPropertyChanged();
+            }
+        }
+
         public MainViewModel(CategoryManager categoryManager)
         {
             _categoryManager = categoryManager;
@@ -105,12 +116,12 @@ namespace KarateTournamentApp.ViewModels
             Categories = new ObservableCollection<CategoryViewModel>();
 
             AddParticipantCommand = new RelayCommand(o => CreateParticipant(), o => CanCreateParticipant());
-            ImportCommand = new RelayCommand(o => ImportData());
-            ExportCommand = new RelayCommand(o => ExportData(), o => _categoryManager.DefinedCategories.Any());
-            ImportXmlCommand = new RelayCommand(o => ImportXmlData(), o => DivideByAge || DivideByBelt);
-            CreateXmlTemplateCommand = new RelayCommand(o => CreateXmlTemplate());
-            ImportExcelCommand = new RelayCommand(o => ImportExcelData(), o => DivideByAge || DivideByBelt);
-            CreateExcelTemplateCommand = new RelayCommand(o => CreateExcelTemplate());
+            ImportCommand = new AsyncRelayCommand(ImportDataAsync);
+            ExportCommand = new AsyncRelayCommand(ExportDataAsync, () => _categoryManager.DefinedCategories.Any());
+            ImportXmlCommand = new AsyncRelayCommand(ImportXmlDataAsync, () => DivideByAge || DivideByBelt);
+            CreateXmlTemplateCommand = new AsyncRelayCommand(CreateXmlTemplateAsync);
+            ImportExcelCommand = new AsyncRelayCommand(ImportExcelDataAsync, () => DivideByAge || DivideByBelt);
+            CreateExcelTemplateCommand = new AsyncRelayCommand(CreateExcelTemplateAsync);
         }
 
         private bool CanCreateParticipant()
@@ -236,37 +247,69 @@ namespace KarateTournamentApp.ViewModels
             }
         }
 
-        private void ImportData()
+        private async Task ImportDataAsync()
         {
-            _importService.ImportData(_categoryManager, AllParticipants);
-            RefreshCategories();
+            IsLoading = true;
+            try
+            {
+                await _importService.ImportDataAsync(_categoryManager, AllParticipants);
+                RefreshCategories();
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
-        private void ImportXmlData()
+        private async Task ImportXmlDataAsync()
         {
-            _importService.ImportParticipantsFromXml(_categoryManager, AllParticipants, DivideByBelt, DivideByAge);
-            RefreshCategories();
+            IsLoading = true;
+            try
+            {
+                await _importService.ImportParticipantsFromXmlAsync(_categoryManager, AllParticipants, DivideByBelt, DivideByAge);
+                RefreshCategories();
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
-        private void CreateXmlTemplate()
+        private async Task CreateXmlTemplateAsync()
         {
-            _importService.CreateSampleXmlFile();
+            await _importService.CreateSampleXmlFileAsync();
         }
 
-        private void ImportExcelData()
+        private async Task ImportExcelDataAsync()
         {
-            _importService.ImportParticipantsFromExcel(_categoryManager, AllParticipants, DivideByBelt, DivideByAge);
-            RefreshCategories();
+            IsLoading = true;
+            try
+            {
+                await _importService.ImportParticipantsFromExcelAsync(_categoryManager, AllParticipants, DivideByBelt, DivideByAge);
+                RefreshCategories();
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
-        private void CreateExcelTemplate()
+        private async Task CreateExcelTemplateAsync()
         {
-            _importService.CreateSampleExcelFile();
+            await _importService.CreateSampleExcelFileAsync();
         }
 
-        private void ExportData()
+        private async Task ExportDataAsync()
         {
-            _exportService.ExportData(_categoryManager);
+            IsLoading = true;
+            try
+            {
+                await _exportService.ExportDataAsync(_categoryManager);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
     }
 }

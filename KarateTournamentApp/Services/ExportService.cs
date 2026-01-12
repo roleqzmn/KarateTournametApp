@@ -15,7 +15,8 @@ namespace KarateTournamentApp.Services
         {
             _jsonService = new JsonService();
         }
-        public void ExportData(CategoryManager _categoryManager)
+
+        public async Task ExportDataAsync(CategoryManager _categoryManager)
         {
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog
             {
@@ -28,7 +29,7 @@ namespace KarateTournamentApp.Services
             {
                 try
                 {
-                    _jsonService.SaveTournamentData(saveFileDialog.FileName, _categoryManager.DefinedCategories);
+                    await _jsonService.SaveTournamentDataAsync(saveFileDialog.FileName, _categoryManager.DefinedCategories);
                     MessageBox.Show($"Pomyślnie wyeksportowano {_categoryManager.DefinedCategories.Count} kategorii!",
                         "Export zakończony", MessageBoxButton.OK, MessageBoxImage.Information);
                 }

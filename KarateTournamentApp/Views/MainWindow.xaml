@@ -318,6 +318,24 @@ Title="Karate Tournament Manager" Height="917" Width="1524" Background="#F0F0F0"
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
+            <!-- Loading Overlay -->
+            <Border Grid.ColumnSpan="2"
+                    Background="#80000000"
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Panel.ZIndex="9999">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ProgressBar IsIndeterminate="True"
+                                 Width="200"
+                                 Height="20"
+                                 Margin="0,0,0,20"/>
+                    <TextBlock Text="Ładowanie..."
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
             <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="15" BorderBrush="#DDD" BorderThickness="1" Margin="32,0,1164,0" Grid.ColumnSpan="2">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="-6,0,0,0">
                     <StackPanel>

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace KarateTournamentApp.Services
 {
@@ -18,18 +19,24 @@ namespace KarateTournamentApp.Services
             };
          }
 
-        public void SaveTournamentData(string filePath, List<Category> categories)
+        /// <summary>
+        /// Asynchronously saves tournament data to JSON file
+        /// </summary>
+        public async Task SaveTournamentDataAsync(string filePath, List<Category> categories)
         {
             string jsonString = JsonSerializer.Serialize(categories, GetOptions());
-
-            File.WriteAllText(filePath, jsonString);
+            await File.WriteAllTextAsync(filePath, jsonString);
         }
 
-        public List<Category> LoadTournamentData(string filePath)
+        /// <summary>
+        /// Asynchronously loads tournament data from JSON file
+        /// </summary>
+        public async Task<List<Category>> LoadTournamentDataAsync(string filePath)
         {
-            if (!File.Exists(filePath)) return new List<Category>();
+            if (!File.Exists(filePath)) 
+                return new List<Category>();
 
-            string jsonString = File.ReadAllText(filePath);
+            string jsonString = await File.ReadAllTextAsync(filePath);
             return JsonSerializer.Deserialize<List<Category>>(jsonString, GetOptions());
         }
     }
