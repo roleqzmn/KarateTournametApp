@@ -57,7 +57,6 @@ namespace KarateTournamentApp.ViewModels
         {
             Winner = participant;
             
-            // Update scoreboard if available
             _scoreboardViewModel?.AnnounceWinner(participant);
         }
 

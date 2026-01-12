@@ -116,7 +116,6 @@ namespace KarateTournamentApp.ViewModels
             }
             else
             {
-                // Competition finished
                 _category.IsFinished = true;
                 CurrentParticipant = null;
             }
@@ -131,36 +130,22 @@ namespace KarateTournamentApp.ViewModels
                 var result = new ParticipantResult
                 {
                     Participant = CurrentParticipant,
-                    Score = FinalScore, // This uses the calculated score (with removed extremes)
-                    JudgeScores = new List<decimal>(JudgeScores) // Store ALL original scores
+                    Score = FinalScore, 
+                    JudgeScores = new List<decimal>(JudgeScores) 
                 };
                 
                 Results.Add(result);
                 
-                // Move to next participant automatically
+
                 MoveToNextParticipant();
             }
-        }
-
-        // Helper method to calculate final score from a list of judge scores
-        private decimal CalculateFinalScore(List<decimal> judgeScores)
-        {
-            if (judgeScores == null || judgeScores.Count < 3) return 0;
-            
-            // Create a sorted copy to avoid modifying the original
-            var scoresCopy = judgeScores.OrderBy(s => s).ToList();
-            // Remove lowest and highest from the copy
-            scoresCopy.RemoveAt(0);
-            scoresCopy.RemoveAt(scoresCopy.Count - 1);
-            
-            return scoresCopy.Sum();
         }
 
         private void AddJudgeScore(object parameter)
         {
             if (parameter is string scoreText && decimal.TryParse(scoreText, out decimal score))
             {
-                if (score >= 0 && score <= 10) // Assuming 0-10 scale
+                if (score >= 0 && score <= 10) 
                 {
                     JudgeScores.Add(score);
                     OnPropertyChanged(nameof(FinalScore));
@@ -338,21 +323,4 @@ namespace KarateTournamentApp.ViewModels
         }
     }
 
-    /// <summary>
-    /// Stores the result for a participant in an individual competition
-    /// </summary>
-    public class ParticipantResult
-    {
-        public Participant Participant { get; set; }
-        
-        /// <summary>
-        /// Final calculated score (with highest and lowest judge scores removed)
-        /// </summary>
-        public decimal Score { get; set; }
-        
-        /// <summary>
-        /// ALL original judge scores (including highest and lowest that were removed for final score calculation)
-        /// </summary>
-        public List<decimal> JudgeScores { get; set; }
-    }
 }

@@ -1,4 +1,4 @@
-<UserControl x:Class="KarateTournamentApp.Views.ScoreboardJudge"
+﻿<UserControl x:Class="KarateTournamentApp.Views.ScoreboardJudge"
          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -52,36 +52,122 @@
 
                         <!-- Timer Controls -->
                         <GroupBox Header="Zarzadzanie Czasem" Padding="10" Margin="0,0,0,15">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <Button Content="? Start" 
-                                        Command="{Binding StartTimerCommand}"
-                                        Background="#27AE60" 
-                                        Foreground="White"
-                                        FontSize="16"
-                                        FontWeight="Bold"
-                                        Padding="20,10"
-                                        Margin="5"
-                                        Cursor="Hand"/>
-                                
-                                <Button Content="? Stop" 
-                                        Command="{Binding StopTimerCommand}"
-                                        Background="#E67E22" 
-                                        Foreground="White"
-                                        FontSize="16"
-                                        FontWeight="Bold"
-                                        Padding="20,10"
-                                        Margin="5"
-                                        Cursor="Hand"/>
-                                
-                                <Button Content="? Reset" 
-                                        Command="{Binding ResetTimerCommand}"
-                                        Background="#3498DB" 
-                                        Foreground="White"
-                                        FontSize="16"
-                                        FontWeight="Bold"
-                                        Padding="20,10"
-                                        Margin="5"
-                                        Cursor="Hand"/>
+                            <StackPanel>
+                                <!-- Timer Buttons -->
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,15">
+                                    <Button Content="? Start" 
+                                            Command="{Binding StartTimerCommand}"
+                                            Background="#27AE60" 
+                                            Foreground="White"
+                                            FontSize="16"
+                                            FontWeight="Bold"
+                                            Padding="20,10"
+                                            Margin="5"
+                                            Cursor="Hand"/>
+                                    
+                                    <Button Content="? Stop" 
+                                            Command="{Binding StopTimerCommand}"
+                                            Background="#E67E22" 
+                                            Foreground="White"
+                                            FontSize="16"
+                                            FontWeight="Bold"
+                                            Padding="20,10"
+                                            Margin="5"
+                                            Cursor="Hand"/>
+                                    
+                                    <Button Content="? Reset (3:00)" 
+                                            Command="{Binding ResetTimerCommand}"
+                                            Background="#3498DB" 
+                                            Foreground="White"
+                                            FontSize="16"
+                                            FontWeight="Bold"
+                                            Padding="20,10"
+                                            Margin="5"
+                                            Cursor="Hand"/>
+                                </StackPanel>
+
+                                <!-- Manual Time Set -->
+                                <GroupBox Header="Ustaw Czas Recznie" Padding="10" Background="#ECF0F1">
+                                    <StackPanel>
+                                        <TextBlock Text="Wpisz czas w sekundach (np. 180) lub format MM:SS (np. 3:00)" 
+                                                   FontSize="11"
+                                                   Foreground="#7F8C8D"
+                                                   TextWrapping="Wrap"
+                                                   Margin="0,0,0,10"/>
+                                        
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            
+                                            <TextBox Grid.Column="0"
+                                                     Text="{Binding TimeInput, UpdateSourceTrigger=PropertyChanged}"
+                                                     FontSize="16"
+                                                     Padding="10"
+                                                     Margin="0,0,10,0"
+                                                     VerticalContentAlignment="Center">
+                                                <TextBox.InputBindings>
+                                                    <KeyBinding Key="Return" Command="{Binding SetTimeCommand}"/>
+                                                </TextBox.InputBindings>
+                                            </TextBox>
+                                            
+                                            <Button Grid.Column="1"
+                                                    Content="? Ustaw"
+                                                    Command="{Binding SetTimeCommand}"
+                                                    Background="#9B59B6"
+                                                    Foreground="White"
+                                                    FontSize="14"
+                                                    FontWeight="Bold"
+                                                    Padding="20,10"
+                                                    Cursor="Hand"/>
+                                        </Grid>
+                                        
+                                        <!-- Quick Time Presets -->
+                                        <TextBlock Text="Szybki wybór:" 
+                                                   FontSize="11"
+                                                   FontWeight="Bold"
+                                                   Margin="0,10,0,5"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Content="1:00" 
+                                                    Command="{Binding SetTimeCommand}"
+                                                    CommandParameter="60"
+                                                    Background="#95A5A6"
+                                                    Foreground="White"
+                                                    FontSize="12"
+                                                    Padding="15,5"
+                                                    Margin="3"
+                                                    Cursor="Hand"/>
+                                            <Button Content="1:30" 
+                                                    Command="{Binding SetTimeCommand}"
+                                                    CommandParameter="90"
+                                                    Background="#95A5A6"
+                                                    Foreground="White"
+                                                    FontSize="12"
+                                                    Padding="15,5"
+                                                    Margin="3"
+                                                    Cursor="Hand"/>
+                                            <Button Content="2:00" 
+                                                    Command="{Binding SetTimeCommand}"
+                                                    CommandParameter="120"
+                                                    Background="#95A5A6"
+                                                    Foreground="White"
+                                                    FontSize="12"
+                                                    Padding="15,5"
+                                                    Margin="3"
+                                                    Cursor="Hand"/>
+                                            <Button Content="3:00" 
+                                                    Command="{Binding SetTimeCommand}"
+                                                    CommandParameter="180"
+                                                    Background="#95A5A6"
+                                                    Foreground="White"
+                                                    FontSize="12"
+                                                    Padding="15,5"
+                                                    Margin="3"
+                                                    Cursor="Hand"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </GroupBox>
                             </StackPanel>
                         </GroupBox>
 
@@ -252,3 +338,4 @@
         </Border>
     </Grid>
 </UserControl>
+

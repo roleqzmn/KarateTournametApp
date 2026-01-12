@@ -144,7 +144,7 @@ namespace KarateTournamentApp.ViewModels
         private void StartCompetition()
         {
             // Check if this is a Kumite category (bracket-style competition)
-            if (_category is ShobuSanbonCategory)
+            if (_category.CategoryType == CategoryType.Kumite || _category is ShobuSanbonCategory)
             {
                 StartBracketCompetition();
             }

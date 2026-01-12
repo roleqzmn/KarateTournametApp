@@ -12,23 +12,8 @@
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 </UserControl.Resources>
 <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <!-- Header with category name -->
-        <Border Grid.Row="0" Background="#2C3E50" Padding="20">
-            <TextBlock Text="{Binding CategoryName}" 
-                       FontSize="36" 
-                       FontWeight="Bold" 
-                       Foreground="White"
-                       HorizontalAlignment="Center"/>
-        </Border>
-
-        <!-- Main scoreboard area -->
-        <Grid Grid.Row="1" Margin="40">
+<!-- Main scoreboard area -->
+<Grid Margin="40">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -99,12 +84,12 @@
             </Border>
 
             <!-- SHIRO (White Corner) -->
-            <Border Grid.Column="2" Background="#2980B9" CornerRadius="10" Padding="30">
+            <Border Grid.Column="2" Background="White" CornerRadius="10" Padding="30">
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="SHIRO" 
                                FontSize="32" 
                                FontWeight="Bold" 
-                               Foreground="White"
+                               Foreground="Black"
                                HorizontalAlignment="Center"
                                Margin="0,0,0,20"/>
                     
@@ -138,13 +123,5 @@
                 </StackPanel>
             </Border>
         </Grid>
-
-        <!-- Footer -->
-        <Border Grid.Row="2" Background="#2C3E50" Padding="15">
-            <TextBlock Text="Karate Tournament Manager" 
-                       FontSize="20" 
-                       Foreground="#95a5a6"
-                       HorizontalAlignment="Center"/>
-        </Border>
     </Grid>
 </UserControl>

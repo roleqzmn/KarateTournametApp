@@ -3,6 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace KarateTournamentApp.Models
 {
+    /// <summary>
+    /// Karate belts enum
+    /// </summary>
     public enum Belts
     {
         Kyu10 = 10,
@@ -23,6 +26,10 @@ namespace KarateTournamentApp.Models
         Female = 2,
         Unisex = 3
     }
+
+    /// <summary>
+    /// Class containing all necessary participant info
+    /// </summary>
     public class Participant
     {
         public Guid Id { get; set; } = Guid.NewGuid();

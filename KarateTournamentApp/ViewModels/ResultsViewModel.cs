@@ -1,5 +1,7 @@
+using KarateTournamentApp.Models;
 using System.Collections.ObjectModel;
 using System.Linq;
+using KarateTournamentApp.Models;
 
 namespace KarateTournamentApp.ViewModels
 {
@@ -18,3 +20,6 @@ namespace KarateTournamentApp.ViewModels
         }
     }
 }
+
+
+

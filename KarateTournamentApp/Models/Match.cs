@@ -44,6 +44,15 @@ namespace KarateTournamentApp.Models
         public int PenaltyAka { get; set; } = 0;
         public int PenaltyShiro { get; set; } = 0;
         public bool IsRunning { get; set; } = false;
+        
+        // Senshu (advantage for first point)
+        public bool SenshuEnabled { get; set; } = true; // Can be configured per match/category
+        public bool HasSenshuAka { get; set; } = false; // True if Aka scored first
+        public bool HasSenshuShiro { get; set; } = false; // True if Shiro scored first
+        
+        // Overtime (Encho-sen)
+        public bool IsInOvertime { get; set; } = false;
+        public int OvertimeCount { get; set; } = 0; // How many overtimes have been played
 
         public ShobuSanbonMatch() : base()
         {

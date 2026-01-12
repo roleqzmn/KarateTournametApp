@@ -30,11 +30,23 @@ namespace KarateTournamentApp.ViewModels
         public ICommand StartTimerCommand { get; }
         public ICommand StopTimerCommand { get; }
         public ICommand ResetTimerCommand { get; }
+        public ICommand SetTimeCommand { get; }
         public ICommand FinishMatchCommand { get; }
         public ICommand NextMatchCommand { get; }
 
         // Commands for other categories (Kata, Kumite, etc.)
         public ICommand AddJudgeScoreCommand { get; }
+
+        private string _timeInput;
+        public string TimeInput
+        {
+            get => _timeInput;
+            set
+            {
+                _timeInput = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ScoreboardJudgeViewModel(CompetitionManagerViewModel competitionManager, ScoreboardViewModel scoreboardViewModel = null)
         {
@@ -55,6 +67,7 @@ namespace KarateTournamentApp.ViewModels
             StartTimerCommand = new RelayCommand(o => StartTimer());
             StopTimerCommand = new RelayCommand(o => StopTimer());
             ResetTimerCommand = new RelayCommand(o => ResetTimer());
+            SetTimeCommand = new RelayCommand(o => SetTime(o), o => CanSetTime(o));
 
             FinishMatchCommand = _competitionManager.FinishMatchCommand;
             NextMatchCommand = _competitionManager.NextMatchCommand;
@@ -95,6 +108,67 @@ namespace KarateTournamentApp.ViewModels
                 shobuMatch.IsRunning = false;
                 _scoreboardViewModel?.StopTimer();
                 RefreshAll();
+            }
+        }
+
+        private bool CanSetTime(object parameter)
+        {
+            if (_competitionManager.CurrentMatch is not ShobuSanbonMatch)
+                return false;
+            
+            // If parameter is provided (quick preset button)
+            if (parameter is string)
+                return true;
+            
+            // If manual input
+            return !string.IsNullOrWhiteSpace(TimeInput);
+        }
+
+        private void SetTime(object parameter)
+        {
+            if (_competitionManager.CurrentMatch is ShobuSanbonMatch shobuMatch)
+            {
+                string timeValue = parameter as string ?? TimeInput;
+                
+                if (string.IsNullOrWhiteSpace(timeValue))
+                    return;
+                
+                // Try to parse as seconds first
+                if (double.TryParse(timeValue, out double seconds))
+                {
+                    if (seconds >= 0 && seconds <= 600) // Max 10 minutes
+                    {
+                        shobuMatch.TimeRemaining = seconds;
+                        shobuMatch.IsRunning = false;
+                        _scoreboardViewModel?.StopTimer();
+                        TimeInput = string.Empty;
+                        RefreshAll();
+                        return;
+                    }
+                }
+                
+                // Try to parse as MM:SS format
+                var parts = timeValue.Split(':');
+                if (parts.Length == 2 && int.TryParse(parts[0], out int minutes) && int.TryParse(parts[1], out int secs))
+                {
+                    if (minutes >= 0 && minutes <= 10 && secs >= 0 && secs < 60)
+                    {
+                        double totalSeconds = minutes * 60 + secs;
+                        shobuMatch.TimeRemaining = totalSeconds;
+                        shobuMatch.IsRunning = false;
+                        _scoreboardViewModel?.StopTimer();
+                        TimeInput = string.Empty;
+                        RefreshAll();
+                        return;
+                    }
+                }
+                
+                // Invalid input
+                System.Windows.MessageBox.Show(
+                    "Nieprawidłowy format czasu!\nUżyj sekund (np. 180) lub MM:SS (np. 3:00)",
+                    "Błąd",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Warning);
             }
         }
 
