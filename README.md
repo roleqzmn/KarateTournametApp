@@ -4,7 +4,7 @@ A comprehensive desktop application for managing karate tournaments, built with 
 
 ## Overview
 
-Karate Tournament Manager is a Windows desktop application designed to streamline the organization and management of karate competitions. It supports multiple competition formats including Kata (forms), Kumite (sparring), Kihon (basics), Kobudo (weapons), and Grappling, with specialized features for Shobu Sanbon (point-based sparring) matches.
+Karate Tournament Manager is a Windows desktop application designed to streamline the organization and management of karate competitions. It supports multiple competition formats including Kata (forms), Kihon (basics), Kobudo (weapons), and Grappling, with specialized features for Shobu Sanbon (point-based sparring) matches.
 
 ## Features
 
