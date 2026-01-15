@@ -290,17 +290,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For bug reports and feature requests, please use the GitHub Issues page.
 
-## Roadmap
-
-Future enhancements planned:
-- Double elimination brackets
-- Round-robin tournament format
-- Print functionality for brackets and results
-- Database backend option
-- Network-based scoreboard display
-- Mobile companion app
-- Video recording integration
-- Statistical analysis tools
 
 ## Contact
 
