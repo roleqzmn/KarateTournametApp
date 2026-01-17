@@ -1,4 +1,4 @@
-﻿# Karate Tournament Manager
+# Karate Tournament Manager
 
 A comprehensive desktop application for managing karate tournaments, built with WPF and .NET 8.
 
@@ -13,7 +13,7 @@ Karate Tournament Manager is a Windows desktop application designed to streamlin
 - **Bracket System**: Automatic bracket generation for elimination tournaments
 - **Individual Competitions**: Judge scoring system for Kata and other forms-based events
 - **Live Scoring**: Real-time score tracking with public scoreboard display
-- **Timer Management**: Built-in timer for Shobu Sanbon matches with manual control
+- **Timer Management**: Built-in timer for Kumite matches with manual control
 
 ### Participant Management
 - **Registration System**: Easy participant registration with detailed information
@@ -21,7 +21,7 @@ Karate Tournament Manager is a Windows desktop application designed to streamlin
 - **Import/Export**: Support for XML, Excel, and JSON formats
 - **Duplicate Detection**: Automatic checking for duplicate participants
 
-### Shobu Sanbon Features
+### Kumite Features
 - **Senshu System**: Automatic tracking of first-point advantage
 - **Overtime (Encho-sen)**: Configurable overtime rounds with automatic time addition
 - **Penalty Tracking**: Real-time penalty management for both competitors
@@ -60,7 +60,7 @@ Karate Tournament Manager is a Windows desktop application designed to streamlin
 
 - Windows 10 or later
 - .NET 8 Runtime
-- Minimum 2GB RAM
+- 2GB RAM
 - 50MB free disk space
 - Display resolution: 1024x768 or higher (1920x1080 recommended for dual-monitor scoreboard setup)
 
