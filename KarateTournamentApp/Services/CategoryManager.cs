@@ -23,7 +23,7 @@ namespace KarateTournamentApp.Services
             foreach(var categoryType in p.Categories)
             {
                 var targetCategory = DefinedCategories.FirstOrDefault(c =>
-                   c.MaxAge < 18 &&
+                   c.MinAge >= 18 &&
                    c.AllowedBelts.Contains(p.Belt) &&
                    (p.Sex == c.Sex || c.Sex == Sex.Unisex) &&
                    categoryType == c.CategoryType);
@@ -37,10 +37,10 @@ namespace KarateTournamentApp.Services
                     StringBuilder sb = new StringBuilder();
                     sb.Append(p.Belt.ToString());
                     string name = sb.ToString();
-                    var cat = new Category(name, p.Belt, categoryType, p.Sex, 1, 17);
+                    var cat = new Category(p.Belt, categoryType, p.Sex, 18, 99);
                     if (categoryType == CategoryType.Kumite)
                     {
-                        cat = new ShobuSanbonCategory(name, p.Belt, categoryType, p.Sex, 1, 17);
+                        cat = new ShobuSanbonCategory(p.Belt, categoryType, p.Sex, 18, 99);
                     }
                     cat.Participants.Add(p);
                     DefinedCategories.Add(cat);
@@ -51,13 +51,26 @@ namespace KarateTournamentApp.Services
         {
             foreach (var categoryType in p.Categories)
             {
-                var cat = new Category("Senior", AllBelts, categoryType, p.Sex, 18, 99);
-                if (categoryType == CategoryType.Kumite)
+                var targetCategory = DefinedCategories.FirstOrDefault(c =>
+                c.MaxAge < 18 &&
+                c.AllowedBelts.Contains(p.Belt) &&
+                (p.Sex == c.Sex || c.Sex == Sex.Unisex) &&
+                categoryType == c.CategoryType);
+
+                if (targetCategory != null)
                 {
-                    cat = new ShobuSanbonCategory("Senior", AllBelts, categoryType, p.Sex, 18, 99);
+                    targetCategory.Participants.Add(p);
                 }
-                cat.Participants.Add(p);
-                DefinedCategories.Add(cat);
+                else
+                {
+                    var cat = new Category(p.Belt, categoryType, p.Sex, 1, 17);
+                    if (categoryType == CategoryType.Kumite)
+                    {
+                        cat = new ShobuSanbonCategory(p.Belt, categoryType, p.Sex, 1, 17);
+                    }
+                    cat.Participants.Add(p);
+                    DefinedCategories.Add(cat);
+                }
             }
         }
         public void AssignByAge(Participant p)
@@ -79,10 +92,10 @@ namespace KarateTournamentApp.Services
                     StringBuilder sb = new StringBuilder();
                     sb.Append(p.Age.ToString());
                     string name = sb.ToString();
-                    var cat = new Category(name, AllBelts, categoryType, p.Sex, p.Age, p.Age);
+                    var cat = new Category(AllBelts, categoryType, p.Sex, p.Age, p.Age);
                     if (categoryType == CategoryType.Kumite)
                     {
-                        cat = new ShobuSanbonCategory(name, AllBelts, categoryType, p.Sex, p.Age, p.Age);
+                        cat = new ShobuSanbonCategory(AllBelts, categoryType, p.Sex, p.Age, p.Age);
                     }
                     cat.Participants.Add(p);
                     DefinedCategories.Add(cat);
@@ -111,10 +124,10 @@ namespace KarateTournamentApp.Services
                     sb.Append(" ");
                     sb.Append(p.Age.ToString());
                     string name = sb.ToString();
-                    var cat = new Category(name, p.Belt, categoryType, p.Sex, p.Age, p.Age);
+                    var cat = new Category(p.Belt, categoryType, p.Sex, p.Age, p.Age);
                     if (categoryType == CategoryType.Kumite)
                     {
-                        cat = new ShobuSanbonCategory(name, p.Belt, categoryType, p.Sex, p.Age, p.Age);
+                        cat = new ShobuSanbonCategory(p.Belt, categoryType, p.Sex, p.Age, p.Age);
                     }
                     cat.Participants.Add(p);
                     DefinedCategories.Add(cat);

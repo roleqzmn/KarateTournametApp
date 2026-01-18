@@ -148,7 +148,7 @@
         <!-- Control Buttons -->
         <Border Grid.Row="2" Background="White" CornerRadius="5" Padding="15" Margin="0,15,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Zakoncz tego zawodnika" 
+                <Button Content="Nastepny zawodnik" 
                         Command="{Binding FinishParticipantCommand}"
                         Background="#27AE60" 
                         Foreground="White"
