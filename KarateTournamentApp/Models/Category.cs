@@ -14,7 +14,8 @@ namespace KarateTournamentApp.Models
         Kihon,
         KobudoShort,
         KobudoLong,
-        Grappling
+        Grappling,
+        Team
     }
 
     [JsonDerivedType(typeof(Category), typeDiscriminator: "base")]
@@ -30,6 +31,7 @@ namespace KarateTournamentApp.Models
         public bool IsFinished { get; set; } = false;
         public Sex Sex { get; set; }
         public CategoryType CategoryType { get; set; }
+        public List<(List<decimal> Scores, Guid ParticipantId)> JudgingScores { get; set; } = new List<(List<decimal>, Guid)>();
 
         public Category(Belts belt, CategoryType type, Sex sex = Sex.Unisex, int? minAge = null, int? maxAge = null)
         {
@@ -182,6 +184,61 @@ namespace KarateTournamentApp.Models
                 {
                     PromoteWinner(bracketIndex);
                 }
+            }
+        }
+    }
+
+    public class TeamCategory : Category
+    {
+        public ObservableCollection<Team> Teams { get; set; } = new ObservableCollection<Team>();
+        public TeamCategory(List<Belts> belts, CategoryType type, Sex sex = Sex.Unisex, int? minAge = null, int? maxAge = null) : base(belts, type, sex, minAge, maxAge)
+        {
+            GenerateName();
+        }
+        public TeamCategory() : base()
+        {
+        }
+        private void GenerateName()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"Team Kata {MinAge}-{MaxAge}");
+            foreach (var belt in AllowedBelts)
+            {
+                sb.Append($", {belt}");
+            }
+            Name = sb.ToString();
+        }
+        /// <summary>
+        /// Combines the passed category with the current one.
+        /// </summary>
+        public void MergeWith(TeamCategory otherCategory)
+        {
+            if (otherCategory == null) return;
+            foreach (var team in otherCategory.Teams)
+            {
+                if (!Teams.Any(t => t.Id == team.Id))
+                {
+                    Teams.Add(team);
+                }
+            }
+            if (Sex != otherCategory.Sex) Sex = Sex.Unisex;
+            if (otherCategory.MinAge < this.MinAge) this.MinAge = otherCategory.MinAge;
+            if (otherCategory.MaxAge > this.MaxAge) this.MaxAge = otherCategory.MaxAge;
+
+            foreach (var belt in otherCategory.AllowedBelts)
+            {
+                if (!AllowedBelts.Contains(belt))
+                {
+                    AllowedBelts.Add(belt);
+                }
+            }
+            if (MinAge >= 18)
+            {
+                Name = "Senior Team Kata";
+            }
+            else
+            {
+                GenerateName();
             }
         }
     }

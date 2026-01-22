@@ -116,6 +116,7 @@ namespace KarateTournamentApp.ViewModels
             }
             else
             {
+                _category.JudgingScores.Add((new List<decimal>(JudgeScores), CurrentParticipant.Id));
                 _category.IsFinished = true;
                 CurrentParticipant = null;
             }

@@ -18,6 +18,24 @@ namespace KarateTournamentApp.Services
             if (DivideByBelt) AssignByBelt(p);
             if (DivideByBelt && DivideByAge) AssignByBoth(p);
         }
+        public void AssignTeam(Team t)
+        {
+            var targetCategory = DefinedCategories.FirstOrDefault(c =>
+                    c.MinAge >= 18 &&
+                    c.AllowedBelts.Contains(p.Belt) &&
+                    (p.Sex == c.Sex || c.Sex == Sex.Unisex) &&
+                    CategoryType.Team == c.CategoryType);
+            if(targetCategory != null)
+            {
+                targetCategory.Teams.Add(t);
+            }
+            else
+            {
+                var cat = new TeamCategory(AllBelts, CategoryType.Team, t.Sex, t.Age, t.Age);
+                cat.Teams.Add(t);
+                DefinedCategories.Add(cat);
+            }
+        }
         public void AssignSenior(Participant p)
         {
             foreach(var categoryType in p.Categories)
@@ -34,9 +52,6 @@ namespace KarateTournamentApp.Services
                 }
                 else
                 {
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append(p.Belt.ToString());
-                    string name = sb.ToString();
                     var cat = new Category(p.Belt, categoryType, p.Sex, 18, 99);
                     if (categoryType == CategoryType.Kumite)
                     {
@@ -89,9 +104,6 @@ namespace KarateTournamentApp.Services
                 }
                 else
                 { 
-                    StringBuilder sb = new StringBuilder();
-                    sb.Append(p.Age.ToString());
-                    string name = sb.ToString();
                     var cat = new Category(AllBelts, categoryType, p.Sex, p.Age, p.Age);
                     if (categoryType == CategoryType.Kumite)
                     {
