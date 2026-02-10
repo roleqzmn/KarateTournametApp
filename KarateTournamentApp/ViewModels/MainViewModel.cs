@@ -5,7 +5,9 @@ using System.Windows.Input;
 using System.Windows;
 using KarateTournamentApp.Models;
 using KarateTournamentApp.Services;
+using KarateTournamentApp.Commands;
 using System;
+using KarateTournamentApp.Models.ViewItems;
 
 namespace KarateTournamentApp.ViewModels
 {

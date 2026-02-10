@@ -20,10 +20,9 @@ namespace KarateTournamentApp.Services
         }
         public void AssignTeam(Team t)
         {
-            var targetCategory = DefinedCategories.FirstOrDefault(c =>
+            var targetCategory = (TeamCategory?)DefinedCategories.FirstOrDefault(c =>
                     c.MinAge >= 18 &&
-                    c.AllowedBelts.Contains(p.Belt) &&
-                    (p.Sex == c.Sex || c.Sex == Sex.Unisex) &&
+                    (t.Sex == c.Sex || c.Sex == Sex.Unisex) &&
                     CategoryType.Team == c.CategoryType);
             if(targetCategory != null)
             {

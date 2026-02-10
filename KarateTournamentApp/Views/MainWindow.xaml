@@ -129,7 +129,7 @@ Title="Karate Tournament Manager" Height="917" Width="1524" Background="#F0F0F0"
                         BorderThickness="0"
                         Cursor="Hand">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="💾" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="📤" FontSize="16" Margin="0,0,8,0"/>
                         <TextBlock Text="Export" VerticalAlignment="Center"/>
                     </StackPanel>
                     <Button.Style>
@@ -435,6 +435,7 @@ Title="Karate Tournament Manager" Height="917" Width="1524" Background="#F0F0F0"
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
 
                                             <!-- Expand button -->
@@ -669,7 +670,7 @@ Title="Karate Tournament Manager" Height="917" Width="1524" Background="#F0F0F0"
                                                                 <Button Grid.Column="4"
                                                                         Command="{Binding DataContext.RemoveParticipantCommand, ElementName=CategoryBorder}"
                                                                         CommandParameter="{Binding}"
-                                                                        Content="✖"
+                                                                        Content="✕"
                                                                         Background="#E74C3C"
                                                                         Foreground="White"
                                                                         FontWeight="Bold"

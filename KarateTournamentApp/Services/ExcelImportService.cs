@@ -102,7 +102,7 @@ namespace KarateTournamentApp.Services
 
                                     categoryColumn++;
 
-                                    if (categoryColumn > 20)
+                                    if (categoryColumn > 50)
                                     {
                                         break;
                                     }

@@ -1,6 +1,7 @@
 using KarateTournamentApp.Models;
+using KarateTournamentApp.ViewModels;
 
-namespace KarateTournamentApp.ViewModels
+namespace KarateTournamentApp.Models.ViewItems
 {
     public class CategorySelectionItem : ViewModelBase
     {

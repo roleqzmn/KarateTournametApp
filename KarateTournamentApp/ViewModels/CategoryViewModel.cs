@@ -1,6 +1,7 @@
 using System.Windows.Input;
 using KarateTournamentApp.Models;
 using KarateTournamentApp.Views;
+using KarateTournamentApp.Commands;
 
 namespace KarateTournamentApp.ViewModels
 {
@@ -20,6 +21,7 @@ namespace KarateTournamentApp.ViewModels
             StartCompetitionCommand = new RelayCommand(o => StartCompetition(), o => CanStartCompetition());
             DeleteCommand = new RelayCommand(o => RequestDelete(), o => CanDelete());
             InitializeBracketCommand = new RelayCommand(o => InitializeBracket(), o => CanInitializeBracket());
+            ViewResultsCommand = new RelayCommand(o => ViewResults(), o => CanViewResults());
         }
 
         public Category Category => _category;
@@ -58,6 +60,7 @@ namespace KarateTournamentApp.ViewModels
         public ICommand StartCompetitionCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand InitializeBracketCommand { get; }
+        public ICommand ViewResultsCommand { get; }
 
         private void RequestMerge()
         {
@@ -139,6 +142,37 @@ namespace KarateTournamentApp.ViewModels
         private bool CanStartCompetition()
         {
             return _category.Participants.Count >= 2 && !_category.IsFinished;
+        }
+
+        private bool CanViewResults()
+        {
+            // Can view results if category is finished and has saved results
+            return _category.IsFinished && _category.FinalResults != null && _category.FinalResults.Any();
+        }
+
+        private void ViewResults()
+        {
+            // Create a competition manager with saved results
+            var competitionManager = new IndividualCompetitionManagerViewModel(_category);
+            
+            // Load saved results into the manager
+            foreach (var result in _category.FinalResults)
+            {
+                competitionManager.Results.Add(result);
+            }
+
+            // Open results window
+            var resultsWindow = new System.Windows.Window
+            {
+                Title = $"Wyniki - {_category.Name}",
+                Width = 800,
+                Height = 600,
+                Content = new Views.ResultsView
+                {
+                    DataContext = new ResultsViewModel(competitionManager)
+                }
+            };
+            resultsWindow.ShowDialog();
         }
 
         private void StartCompetition()

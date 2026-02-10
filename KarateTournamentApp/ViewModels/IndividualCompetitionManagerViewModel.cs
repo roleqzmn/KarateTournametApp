@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using KarateTournamentApp.Models;
+using KarateTournamentApp.Commands;
 
 namespace KarateTournamentApp.ViewModels
 {
@@ -116,7 +117,15 @@ namespace KarateTournamentApp.ViewModels
             }
             else
             {
-                _category.JudgingScores.Add((new List<decimal>(JudgeScores), CurrentParticipant.Id));
+                // Save all results to category
+                _category.FinalResults = new List<ParticipantResult>(Results);
+                
+                // Also save raw judge scores for backward compatibility
+                foreach (var result in Results)
+                {
+                    _category.JudgingScores.Add((result.JudgeScores, result.Participant.Id));
+                }
+                
                 _category.IsFinished = true;
                 CurrentParticipant = null;
             }
@@ -220,7 +229,11 @@ namespace KarateTournamentApp.ViewModels
 
         public ObservableCollection<ParticipantResult> GetFinalRankings()
         {
-            var results = new ObservableCollection<ParticipantResult>(Results.OrderByDescending(r => r.Score));
+            // Use category's saved results if available, otherwise use local results
+            IEnumerable<ParticipantResult> sourceResults = _category.FinalResults.Any() 
+                ? _category.FinalResults 
+                : Results;
+            var results = new ObservableCollection<ParticipantResult>(sourceResults.OrderByDescending(r => r.Score));
             
             System.Diagnostics.Debug.WriteLine($"GetFinalRankings called. Total results: {results.Count}");
             

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 using KarateTournamentApp.Models;
+using KarateTournamentApp.Commands;
 
 namespace KarateTournamentApp.ViewModels
 {

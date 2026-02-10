@@ -54,7 +54,9 @@ namespace KarateTournamentApp.Models
             Categories = categories;
         }
 
+#pragma warning disable CS8618
         public Participant()
+#pragma warning restore CS8618
         {
         }
     }

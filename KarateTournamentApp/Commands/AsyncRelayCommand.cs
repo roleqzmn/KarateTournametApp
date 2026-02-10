@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace KarateTournamentApp.ViewModels
+namespace KarateTournamentApp.Commands
 {
     /// <summary>
     /// Asynchronous implementation of ICommand for handling async operations in MVVM
@@ -10,22 +10,22 @@ namespace KarateTournamentApp.ViewModels
     public class AsyncRelayCommand : ICommand
     {
         private readonly Func<Task> _execute;
-        private readonly Func<bool> _canExecute;
+        private readonly Func<bool>? _canExecute;
         private bool _isExecuting;
 
-        public event EventHandler CanExecuteChanged
+        public event EventHandler? CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public AsyncRelayCommand(Func<Task> execute, Func<bool> canExecute = null)
+        public AsyncRelayCommand(Func<Task> execute, Func<bool>? canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (_isExecuting)
                 return false;
@@ -33,7 +33,7 @@ namespace KarateTournamentApp.ViewModels
             return _canExecute?.Invoke() ?? true;
         }
 
-        public async void Execute(object parameter)
+        public async void Execute(object? parameter)
         {
             if (_isExecuting)
                 return;
@@ -44,12 +44,6 @@ namespace KarateTournamentApp.ViewModels
             try
             {
                 await _execute();
-            }
-            catch (Exception ex)
-            {
-                // Log exception (mo¿na dodaæ logging póŸniej)
-                System.Diagnostics.Debug.WriteLine($"AsyncRelayCommand error: {ex.Message}");
-                throw;
             }
             finally
             {
@@ -70,30 +64,33 @@ namespace KarateTournamentApp.ViewModels
     public class AsyncRelayCommand<T> : ICommand
     {
         private readonly Func<T, Task> _execute;
-        private readonly Func<T, bool> _canExecute;
+        private readonly Func<T, bool>? _canExecute;
         private bool _isExecuting;
 
-        public event EventHandler CanExecuteChanged
+        public event EventHandler? CanExecuteChanged
         {
             add { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
 
-        public AsyncRelayCommand(Func<T, Task> execute, Func<T, bool> canExecute = null)
+        public AsyncRelayCommand(Func<T, Task> execute, Func<T, bool>? canExecute = null)
         {
             _execute = execute ?? throw new ArgumentNullException(nameof(execute));
             _canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (_isExecuting)
                 return false;
 
-            return _canExecute?.Invoke((T)parameter) ?? true;
+            if (parameter is not T typedParameter)
+                return _canExecute?.Invoke(default!) ?? true;
+
+            return _canExecute?.Invoke(typedParameter) ?? true;
         }
 
-        public async void Execute(object parameter)
+        public async void Execute(object? parameter)
         {
             if (_isExecuting)
                 return;
@@ -103,7 +100,7 @@ namespace KarateTournamentApp.ViewModels
 
             try
             {
-                await _execute((T)parameter);
+                await _execute((T)parameter!);
             }
             catch (Exception ex)
             {
